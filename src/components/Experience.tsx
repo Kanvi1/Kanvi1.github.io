@@ -2,11 +2,41 @@ import { motion } from 'framer-motion';
 import { Briefcase, Calendar } from 'lucide-react';
 
 export default function Experience() {
+  const getAmazonDuration = () => {
+    const startDate = new Date('2024-07-08');
+    const currentDate = new Date();
+    if (currentDate < startDate) return '0 days';
+
+    let years = currentDate.getFullYear() - startDate.getFullYear();
+    const currentMonth = currentDate.getMonth();
+    const startMonth = startDate.getMonth();
+    const currentDay = currentDate.getDate();
+    const startDay = startDate.getDate();
+
+    if (currentMonth < startMonth || (currentMonth === startMonth && currentDay < startDay)) {
+      years--;
+    }
+
+    const lastAnniversary = new Date(startDate);
+    lastAnniversary.setFullYear(startDate.getFullYear() + years);
+
+    const diffTime = currentDate.getTime() - lastAnniversary.getTime();
+    const days = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+
+    const yearsStr = years > 0 ? `${years} yr${years > 1 ? 's' : ''}` : '';
+    const daysStr = days > 0 ? `${days} day${days > 1 ? 's' : ''}` : '';
+
+    if (yearsStr && daysStr) {
+      return `${yearsStr} ${daysStr}`;
+    }
+    return yearsStr || daysStr || '0 days';
+  };
+
   const experiences = [
     {
       company: 'Amazon',
       logo: '/images/logo-amazon.png',
-      duration: 'Jul 2024 - Present',
+      duration: getAmazonDuration(),
       positions: [
         {
           title: 'Software Development Engineer (SDE)',
