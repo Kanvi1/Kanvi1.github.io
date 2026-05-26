@@ -35,24 +35,24 @@
 }
 
 [data-theme="light"] {
-  --bg-primary: #f8fafc;
-  --bg-secondary: #ffffff;
-  --bg-tertiary: #f1f5f9;
+  --bg-primary: #f4f1eb; /* Soft warm paper grey/cream */
+  --bg-secondary: #faf9f6; /* Warm alabaster off-white */
+  --bg-tertiary: #eae6df; /* Warm sand */
   
-  --text-primary: #0f172a;
-  --text-secondary: #475569;
-  --text-muted: #94a3b8;
+  --text-primary: #1c1917; /* Warm dark stone charcoal */
+  --text-secondary: #57534e; /* Warm stone-600 */
+  --text-muted: #78716c; /* Warm stone-500 */
   
   --accent: #ff5005;
   --accent-light: #ff7638;
   --accent-glow: rgba(255, 80, 5, 0.08);
   
-  --border-color: rgba(15, 23, 42, 0.08);
-  --border-color-hover: rgba(15, 23, 42, 0.2);
+  --border-color: rgba(28, 25, 23, 0.08);
+  --border-color-hover: rgba(28, 25, 23, 0.18);
   
-  --glass-bg: rgba(255, 255, 255, 0.7);
-  --glass-border: rgba(15, 23, 42, 0.05);
-  --glass-shadow: rgba(0, 0, 0, 0.04);
+  --glass-bg: rgba(250, 249, 246, 0.75);
+  --glass-border: rgba(28, 25, 23, 0.06);
+  --glass-shadow: rgba(28, 25, 23, 0.03);
 }
 
 /* Base resets & typography */

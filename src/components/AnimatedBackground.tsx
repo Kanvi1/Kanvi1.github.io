@@ -78,9 +78,9 @@ export default function AnimatedBackground() {
       // Draw the theme-specific background plane color
       const baseGrad = ctx.createLinearGradient(0, 0, width, height);
       if (isLight) {
-        baseGrad.addColorStop(0, '#f1f5f9');
-        baseGrad.addColorStop(0.5, '#f8fafc');
-        baseGrad.addColorStop(1, '#f1f5f9');
+        baseGrad.addColorStop(0, '#f4f1eb');
+        baseGrad.addColorStop(0.5, '#faf9f6');
+        baseGrad.addColorStop(1, '#f4f1eb');
       } else {
         baseGrad.addColorStop(0, '#020306');
         baseGrad.addColorStop(0.5, '#040710');
@@ -110,7 +110,7 @@ export default function AnimatedBackground() {
         // Draw radial gradient
         const radGrad = ctx.createRadialGradient(x, y, 0, x, y, radius);
         radGrad.addColorStop(0, color);
-        radGrad.addColorStop(1, isLight ? 'rgba(248, 250, 252, 0)' : 'rgba(2, 3, 6, 0)');
+        radGrad.addColorStop(1, isLight ? 'rgba(244, 241, 235, 0)' : 'rgba(2, 3, 6, 0)');
 
         ctx.fillStyle = radGrad;
         ctx.beginPath();
