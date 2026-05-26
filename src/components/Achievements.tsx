@@ -1,5 +1,4 @@
 import { useRef, useEffect } from 'react';
-import { Award } from 'lucide-react';
 
 interface Achievement {
   date: string;
@@ -233,25 +232,6 @@ export default function Achievements() {
                     target.style.display = 'none';
                   }}
                 />
-                
-                {/* Category Icon */}
-                <div
-                  style={{
-                    position: 'absolute',
-                    top: '0.85rem',
-                    left: '0.85rem',
-                    width: '2rem',
-                    height: '2rem',
-                    backgroundColor: 'var(--accent)',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    color: '#ffffff',
-                    zIndex: 10,
-                  }}
-                >
-                  <Award size={14} />
-                </div>
               </div>
 
               {/* Text Content */}
@@ -332,25 +312,6 @@ export default function Achievements() {
                     target.style.display = 'none';
                   }}
                 />
-                
-                {/* Category Icon */}
-                <div
-                  style={{
-                    position: 'absolute',
-                    top: '0.85rem',
-                    left: '0.85rem',
-                    width: '2rem',
-                    height: '2rem',
-                    backgroundColor: 'var(--accent)',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    color: '#ffffff',
-                    zIndex: 10,
-                  }}
-                >
-                  <Award size={14} />
-                </div>
               </div>
 
               {/* Text Content */}

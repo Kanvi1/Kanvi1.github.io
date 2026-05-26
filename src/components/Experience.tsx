@@ -94,8 +94,8 @@ export default function Experience() {
             {experiences.map((exp, companyIdx) => (
               <motion.div
                 key={companyIdx}
-                initial={{ opacity: 0, x: 20 }}
-                whileInView={{ opacity: 1, x: 0 }}
+                initial={{ opacity: 0, y: 40 }}
+                whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, margin: '-100px' }}
                 transition={{ duration: 0.5, delay: companyIdx * 0.1 }}
                 style={{
