@@ -58,16 +58,16 @@ export default function Hero() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
             style={{
-              fontSize: '0.8rem',
+              fontSize: '0.75rem',
               fontFamily: 'var(--font-mono)',
-              fontWeight: 700,
+              fontWeight: 600,
               color: 'var(--accent)',
               textTransform: 'uppercase',
-              letterSpacing: '0.15em',
+              letterSpacing: '0.2em',
               marginBottom: '1rem',
             }}
           >
-            * SOFTWARE ENGINEER & ARCHITECT *
+            👋 Hello there, I am
           </motion.div>
 
           {/* Name */}
@@ -76,16 +76,19 @@ export default function Hero() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.1 }}
             style={{
-              fontSize: 'clamp(3.5rem, 12vw, 8rem)',
-              fontWeight: 900,
+              fontSize: 'clamp(3.5rem, 10vw, 6.5rem)',
+              fontWeight: 800,
               fontFamily: 'var(--font-sans)',
-              letterSpacing: '-0.06em',
-              lineHeight: 0.85,
+              letterSpacing: '-0.04em',
+              lineHeight: 0.95,
               marginBottom: '2rem',
-              textTransform: 'uppercase',
             }}
           >
-            VISHAL KANWAR
+            Vishal <span style={{
+              fontFamily: 'var(--font-serif)',
+              fontStyle: 'italic',
+              fontWeight: 400,
+            }}>Kanwar</span>
           </motion.h1>
 
           {/* Typing Text */}

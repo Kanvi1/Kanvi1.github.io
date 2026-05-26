@@ -1,49 +1,58 @@
-/* Swiss Editorial Brutalism Design System */
+/* Zentto & Minimal Gallery Inspired Editorial Design System */
 
-@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700;800;900&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap');
 
 :root {
-  /* Stark Black & Gray composition */
-  --bg-primary: #000000; /* Pure black */
-  --bg-secondary: #0d0d0d; /* Crisp charcoal */
-  --bg-tertiary: #161616;
+  /* Colors (Zentto & Dark.design Inspired) */
+  --bg-primary: #020306; /* Deep blue-black */
+  --bg-secondary: #05080e; /* Slightly lighter deep blue-black */
+  --bg-tertiary: #0a0d16;
   
   --text-primary: #ffffff;
-  --text-secondary: #a3a3a3; /* Clean neutral gray */
-  --text-muted: #525252;
+  --text-secondary: #a3b3c9; /* High-contrast readable muted text */
+  --text-muted: #5c6e85;
   
-  /* Saturated accent */
-  --accent: #ff5005; /* Solid safety orange */
+  /* Saturated High-End Accents */
+  --accent: #ff5005; /* Dawn Orange from Shadergradient */
   --accent-light: #ff7638;
-  --accent-glow: rgba(255, 80, 5, 0.15);
+  --accent-glow: rgba(255, 80, 5, 0.08);
   
-  --border-color: rgba(255, 255, 255, 0.15);
-  --border-color-hover: rgba(255, 255, 255, 0.35);
+  --border-color: rgba(255, 255, 255, 0.08);
+  --border-color-hover: rgba(255, 255, 255, 0.18);
+  
+  /* Glass preset */
+  --glass-bg: rgba(5, 8, 14, 0.65);
+  --glass-border: rgba(255, 255, 255, 0.05);
+  --glass-shadow: rgba(0, 0, 0, 0.6);
   
   /* Fonts Pairing */
-  --font-sans: 'Space Grotesk', -apple-system, sans-serif;
+  --font-sans: 'Inter', -apple-system, sans-serif;
   --font-mono: 'Space Mono', monospace;
   
-  --transition-fast: 0.15s cubic-bezier(0.16, 1, 0.3, 1);
-  --transition-normal: 0.35s cubic-bezier(0.16, 1, 0.3, 1);
-  --transition-slow: 0.65s cubic-bezier(0.16, 1, 0.3, 1);
+  --transition-fast: 0.2s cubic-bezier(0.25, 1, 0.5, 1);
+  --transition-normal: 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+  --transition-slow: 0.8s cubic-bezier(0.25, 1, 0.5, 1);
 }
 
 [data-theme="light"] {
-  --bg-primary: #ffffff; /* Pure white */
-  --bg-secondary: #f7f7f7; /* Very light gray */
-  --bg-tertiary: #eeeeee;
+  --bg-primary: #f8fafc;
+  --bg-secondary: #ffffff;
+  --bg-tertiary: #f1f5f9;
   
-  --text-primary: #000000;
-  --text-secondary: #525252;
-  --text-muted: #a3a3a3;
+  --text-primary: #0f172a;
+  --text-secondary: #475569;
+  --text-muted: #94a3b8;
   
   --accent: #ff5005;
   --accent-light: #ff7638;
-  --accent-glow: rgba(255, 80, 5, 0.1);
+  --accent-glow: rgba(255, 80, 5, 0.08);
   
-  --border-color: rgba(0, 0, 0, 0.15);
-  --border-color-hover: rgba(0, 0, 0, 0.35);
+  --border-color: rgba(15, 23, 42, 0.08);
+  --border-color-hover: rgba(15, 23, 42, 0.2);
+  
+  --glass-bg: rgba(255, 255, 255, 0.7);
+  --glass-border: rgba(15, 23, 42, 0.05);
+  --glass-shadow: rgba(0, 0, 0, 0.04);
 }
 
 /* Base resets & typography */
@@ -65,11 +74,7 @@ body {
   overflow-x: hidden;
   transition: background-color var(--transition-normal), color var(--transition-normal);
   -webkit-font-smoothing: antialiased;
-  letter-spacing: -0.03em;
-  background-image: 
-    linear-gradient(var(--border-color) 0.5px, transparent 0.5px),
-    linear-gradient(90deg, var(--border-color) 0.5px, transparent 0.5px);
-  background-size: 80px 80px;
+  letter-spacing: -0.01em;
 }
 
 /* Global Noise Grain Overlay (Zentto Vibe) */
@@ -249,18 +254,21 @@ h2 {
   100% { transform: translate(100px, -70px) scale(1.15); }
 }
 
-/* Premium Flat Card Layouts (Zentto & Minimal Gallery Vibe) */
+/* Premium Card Layouts */
 .glass-card {
-  background: var(--bg-secondary);
-  border: 1px solid var(--border-color);
-  border-radius: 0px; /* Sharp corners for modern architectural grid */
-  padding: 2.25rem;
-  transition: border-color var(--transition-fast), background-color var(--transition-fast);
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  box-shadow: 0 25px 60px var(--glass-shadow);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-radius: 0.25rem;
+  padding: 2.5rem;
+  transition: border-color var(--transition-normal), background-color var(--transition-normal), transform var(--transition-normal);
 }
 
 .glass-card:hover {
   border-color: var(--border-color-hover);
-  background: rgba(255, 255, 255, 0.01);
+  background: rgba(255, 255, 255, 0.015);
 }
 
 /* Tag style */
@@ -279,12 +287,10 @@ h2 {
 /* Buttons */
 .btn {
   font-family: var(--font-sans);
-  font-size: 0.8rem;
-  letter-spacing: 0.05em;
-  text-transform: uppercase;
+  font-size: 0.85rem;
   font-weight: 600;
   padding: 0.85rem 1.75rem;
-  border-radius: 0px; /* Sharp corners */
+  border-radius: 0.25rem;
   transition: all var(--transition-normal);
   display: inline-flex;
   align-items: center;
@@ -302,6 +308,7 @@ h2 {
   background: var(--accent);
   color: #ffffff;
   transform: translateY(-2px);
+  box-shadow: 0 10px 25px var(--accent-glow);
 }
 
 .btn-secondary {
@@ -311,7 +318,7 @@ h2 {
 }
 
 .btn-secondary:hover {
-  background: var(--bg-secondary);
+  background: var(--bg-tertiary);
   border-color: var(--text-primary);
   transform: translateY(-2px);
 }
