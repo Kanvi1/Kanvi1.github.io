@@ -5,31 +5,27 @@ export default function Experience() {
   const getAmazonDuration = () => {
     const startDate = new Date('2024-07-08');
     const currentDate = new Date();
-    if (currentDate < startDate) return '0 days';
+    if (currentDate < startDate) return '0 mos';
 
     let years = currentDate.getFullYear() - startDate.getFullYear();
-    const currentMonth = currentDate.getMonth();
-    const startMonth = startDate.getMonth();
-    const currentDay = currentDate.getDate();
-    const startDay = startDate.getDate();
+    let months = currentDate.getMonth() - startDate.getMonth();
 
-    if (currentMonth < startMonth || (currentMonth === startMonth && currentDay < startDay)) {
-      years--;
+    if (currentDate.getDate() < startDate.getDate()) {
+      months--;
     }
 
-    const lastAnniversary = new Date(startDate);
-    lastAnniversary.setFullYear(startDate.getFullYear() + years);
-
-    const diffTime = currentDate.getTime() - lastAnniversary.getTime();
-    const days = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+    if (months < 0) {
+      years--;
+      months += 12;
+    }
 
     const yearsStr = years > 0 ? `${years} yr${years > 1 ? 's' : ''}` : '';
-    const daysStr = days > 0 ? `${days} day${days > 1 ? 's' : ''}` : '';
+    const monthsStr = months > 0 ? `${months} mo${months > 1 ? 's' : ''}` : '';
 
-    if (yearsStr && daysStr) {
-      return `${yearsStr} ${daysStr}`;
+    if (yearsStr && monthsStr) {
+      return `${yearsStr} ${monthsStr}`;
     }
-    return yearsStr || daysStr || '0 days';
+    return yearsStr || monthsStr || '0 mos';
   };
 
   const experiences = [
