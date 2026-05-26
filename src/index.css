@@ -1,0 +1,357 @@
+/* Swiss Editorial Brutalism Design System */
+
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700;800;900&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap');
+
+:root {
+  /* Stark Black & Gray composition */
+  --bg-primary: #000000; /* Pure black */
+  --bg-secondary: #0d0d0d; /* Crisp charcoal */
+  --bg-tertiary: #161616;
+  
+  --text-primary: #ffffff;
+  --text-secondary: #a3a3a3; /* Clean neutral gray */
+  --text-muted: #525252;
+  
+  /* Saturated accent */
+  --accent: #ff5005; /* Solid safety orange */
+  --accent-light: #ff7638;
+  --accent-glow: rgba(255, 80, 5, 0.15);
+  
+  --border-color: rgba(255, 255, 255, 0.15);
+  --border-color-hover: rgba(255, 255, 255, 0.35);
+  
+  /* Fonts Pairing */
+  --font-sans: 'Space Grotesk', -apple-system, sans-serif;
+  --font-mono: 'Space Mono', monospace;
+  
+  --transition-fast: 0.15s cubic-bezier(0.16, 1, 0.3, 1);
+  --transition-normal: 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+  --transition-slow: 0.65s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+[data-theme="light"] {
+  --bg-primary: #ffffff; /* Pure white */
+  --bg-secondary: #f7f7f7; /* Very light gray */
+  --bg-tertiary: #eeeeee;
+  
+  --text-primary: #000000;
+  --text-secondary: #525252;
+  --text-muted: #a3a3a3;
+  
+  --accent: #ff5005;
+  --accent-light: #ff7638;
+  --accent-glow: rgba(255, 80, 5, 0.1);
+  
+  --border-color: rgba(0, 0, 0, 0.15);
+  --border-color-hover: rgba(0, 0, 0, 0.35);
+}
+
+/* Base resets & typography */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+  font-size: 16px;
+}
+
+body {
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  font-family: var(--font-sans);
+  overflow-x: hidden;
+  transition: background-color var(--transition-normal), color var(--transition-normal);
+  -webkit-font-smoothing: antialiased;
+  letter-spacing: -0.03em;
+  background-image: 
+    linear-gradient(var(--border-color) 0.5px, transparent 0.5px),
+    linear-gradient(90deg, var(--border-color) 0.5px, transparent 0.5px);
+  background-size: 80px 80px;
+}
+
+/* Global Noise Grain Overlay (Zentto Vibe) */
+body::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 9999;
+  opacity: 0.045;
+  pointer-events: none;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+}
+
+@media (min-width: 769px) {
+  body.custom-cursor-active,
+  body.custom-cursor-active * {
+    cursor: none !important;
+  }
+}
+
+/* Scrollbar styling */
+::-webkit-scrollbar {
+  width: 4px;
+}
+::-webkit-scrollbar-track {
+  background: var(--bg-primary);
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 99px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.25);
+}
+
+a {
+  color: inherit;
+  text-decoration: none !important;
+}
+
+a:hover, a:focus, a:active {
+  text-decoration: none !important;
+  outline: none;
+}
+
+/* Global Container */
+.container {
+  max-width: 1250px;
+  margin: 0 auto;
+  padding: 0 4rem;
+}
+
+@media (max-width: 768px) {
+  .container {
+    padding: 0 2rem;
+  }
+}
+
+/* 2-Column Section Layout (framer.com / Dark.design Inspired) */
+.section-grid {
+  display: grid;
+  grid-template-columns: 35% 65%;
+  gap: 4rem;
+  align-items: start;
+}
+
+.sticky-header {
+  position: sticky;
+  top: 7rem;
+}
+
+@media (max-width: 900px) {
+  .section-grid {
+    grid-template-columns: 1fr;
+    gap: 2.5rem;
+  }
+  
+  .sticky-header {
+    position: relative;
+    top: 0;
+  }
+}
+
+/* Typography Hierarchy (Zentto Editorial) */
+h1 {
+  font-family: var(--font-sans);
+  font-size: clamp(3rem, 9vw, 6rem);
+  font-weight: 800;
+  line-height: 0.92;
+  letter-spacing: -0.04em;
+  margin-bottom: 2rem;
+}
+
+h2 {
+  font-family: var(--font-sans);
+  font-size: clamp(2rem, 3.5vw, 2.75rem);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1.05;
+}
+
+.section-subtitle {
+  font-family: var(--font-mono);
+  color: var(--accent);
+  font-size: 0.68rem;
+  text-transform: uppercase;
+  letter-spacing: 0.25em;
+  margin-bottom: 0.75rem;
+  font-weight: 500;
+}
+
+.section-title {
+  font-family: var(--font-sans);
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+/* Custom background animation mesh inspired by Shadergradient */
+.shader-mesh {
+  position: fixed;
+  inset: 0;
+  z-index: -10;
+  overflow: hidden;
+  pointer-events: none;
+  background-color: var(--bg-primary);
+}
+
+.glow-orb {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(140px);
+  opacity: 0.45;
+  pointer-events: none;
+}
+
+.glow-orb-1 {
+  width: 800px;
+  height: 800px;
+  background: radial-gradient(circle, rgba(255, 80, 5, 0.25) 0%, transparent 70%); /* Shadergradient Orange #ff5005 */
+  top: -20%;
+  left: -15%;
+  animation: float-orb-1 30s infinite alternate ease-in-out;
+}
+
+.glow-orb-2 {
+  width: 700px;
+  height: 700px;
+  background: radial-gradient(circle, rgba(219, 186, 149, 0.18) 0%, transparent 70%); /* Shadergradient Dawn Peach #dbba95 */
+  bottom: -15%;
+  right: -10%;
+  animation: float-orb-2 35s infinite alternate ease-in-out;
+}
+
+.glow-orb-3 {
+  width: 600px;
+  height: 600px;
+  background: radial-gradient(circle, rgba(208, 188, 225, 0.15) 0%, transparent 70%); /* Shadergradient Dawn Lavender #d0bce1 */
+  top: 35%;
+  left: 40%;
+  animation: float-orb-3 28s infinite alternate ease-in-out;
+}
+
+@keyframes float-orb-1 {
+  0% { transform: translate(0, 0) scale(1) rotate(0deg); }
+  100% { transform: translate(120px, 80px) scale(1.1) rotate(90deg); }
+}
+
+@keyframes float-orb-2 {
+  0% { transform: translate(0, 0) scale(1) rotate(0deg); }
+  100% { transform: translate(-120px, -100px) scale(1.05) rotate(-60deg); }
+}
+
+@keyframes float-orb-3 {
+  0% { transform: translate(0, 0) scale(1); }
+  100% { transform: translate(100px, -70px) scale(1.15); }
+}
+
+/* Premium Flat Card Layouts (Zentto & Minimal Gallery Vibe) */
+.glass-card {
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+  border-radius: 0px; /* Sharp corners for modern architectural grid */
+  padding: 2.25rem;
+  transition: border-color var(--transition-fast), background-color var(--transition-fast);
+}
+
+.glass-card:hover {
+  border-color: var(--border-color-hover);
+  background: rgba(255, 255, 255, 0.01);
+}
+
+/* Tag style */
+.tag {
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+  border: 1px solid var(--border-color);
+  background: transparent;
+  padding: 0.25rem 0.65rem;
+  border-radius: 0px;
+}
+
+/* Buttons */
+.btn {
+  font-family: var(--font-sans);
+  font-size: 0.8rem;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  font-weight: 600;
+  padding: 0.85rem 1.75rem;
+  border-radius: 0px; /* Sharp corners */
+  transition: all var(--transition-normal);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  cursor: pointer;
+  border: none;
+}
+
+.btn-primary {
+  background: var(--text-primary);
+  color: var(--bg-primary);
+}
+
+.btn-primary:hover {
+  background: var(--accent);
+  color: #ffffff;
+  transform: translateY(-2px);
+}
+
+.btn-secondary {
+  background: transparent;
+  color: var(--text-primary);
+  border: 1px solid var(--border-color);
+}
+
+.btn-secondary:hover {
+  background: var(--bg-secondary);
+  border-color: var(--text-primary);
+  transform: translateY(-2px);
+}
+
+/* Auto-Scrolling Continuous Marquee (godly.website / studioheed.com style) */
+.marquee-container {
+  overflow-x: auto;
+  scrollbar-width: none; /* Hide scrollbar for Firefox */
+  width: 100vw;
+  position: relative;
+  left: 50%;
+  right: 50%;
+  margin-left: -50vw;
+  margin-right: -50vw;
+  padding: 1.5rem 0;
+  border-top: 1px solid var(--border-color);
+  border-bottom: 1px solid var(--border-color);
+  -webkit-overflow-scrolling: touch; /* Momentum scroll for iOS */
+}
+
+.marquee-container::-webkit-scrollbar {
+  display: none; /* Hide scrollbar for Chrome/Safari */
+}
+
+.marquee-track {
+  display: flex;
+  width: max-content;
+  gap: 2rem;
+  padding: 0 2rem;
+}
+
+/* Hide default cursor on desktop when Custom Cursor is active */
+.desktop-menu a {
+  text-decoration: none !important;
+}
+.desktop-menu a:hover {
+  text-decoration: none !important;
+}
+.social-link-icon:hover svg,
+.social-icon-btn:hover svg {
+  color: var(--accent) !important;
+}
+
