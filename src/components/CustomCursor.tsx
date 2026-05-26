@@ -1,7 +1,11 @@
 import { useEffect, useState } from 'react';
 import { motion, useMotionValue, useSpring } from 'framer-motion';
 
-export default function CustomCursor() {
+interface CustomCursorProps {
+  theme: 'dark' | 'light';
+}
+
+export default function CustomCursor({ theme }: CustomCursorProps) {
   const [hovered, setHovered] = useState(false);
   const [isVisible, setIsVisible] = useState(false);
 
@@ -76,7 +80,7 @@ export default function CustomCursor() {
           backgroundColor: hovered ? 'var(--accent-glow)' : 'transparent',
           pointerEvents: 'none',
           zIndex: 9999,
-          mixBlendMode: hovered ? 'normal' : 'difference',
+          mixBlendMode: theme === 'light' ? 'normal' : (hovered ? 'normal' : 'difference'),
         }}
         animate={{
           scale: hovered ? 1.2 : 1,

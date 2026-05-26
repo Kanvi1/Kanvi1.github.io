@@ -38,7 +38,7 @@ export default function App() {
       <AnimatedBackground />
 
       {/* Custom Mouse Cursor */}
-      <CustomCursor />
+      <CustomCursor theme={theme} />
 
       {/* Navigation Menu */}
       <Navbar theme={theme} toggleTheme={toggleTheme} />
