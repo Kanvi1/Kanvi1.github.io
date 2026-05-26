@@ -4,29 +4,41 @@ import { Briefcase, Calendar } from 'lucide-react';
 export default function Experience() {
   const experiences = [
     {
+      company: 'Amazon',
+      logo: '/images/logo-amazon.png',
+      duration: 'Jul 2024 - Present',
+      positions: [
+        {
+          title: 'Software Development Engineer (SDE)',
+          period: 'Jul 2024 - Present',
+          desc: 'Architect and maintain global compliance web platforms and high-throughput data pipelines within the Sustainability Technology organization. Support the Human Risk and Social Impact (HRSI) team by building technical systems to manage, audit, and remediate workplace safety and human rights compliance records for thousands of suppliers worldwide, protecting workers from operational risks.',
+        },
+      ],
+    },
+    {
       company: 'Deloitte',
       logo: '/images/logo-deloitte-2.jpg',
-      duration: '3 yrs 7 mos',
+      duration: '3 yrs 5 mos',
       positions: [
         {
           title: 'Senior Software Engineer',
           period: 'May 2022 - Jul 2022',
-          desc: 'Assumed a leadership capacity, mentoring and guiding a team of three junior developers. Together, we successfully designed and developed several critical modules providing substantial business value. Leading this dedicated team was a source of significant learning and personal growth.',
+          desc: 'Led a team of 3 junior developers to design, develop, and deliver high-impact compliance and risk modules. Streamlined API integrations and code review practices, increasing sprint velocity by 20% while ensuring zero regulatory defects.',
         },
         {
           title: 'Software Engineer I',
           period: 'May 2021 - May 2022',
-          desc: 'Dedicated to providing comprehensive solutions for large-scale organizations to address regulatory and operational risks. Consistently recognized for exceptional contributions and honored with numerous performance awards, including the Outstanding Performance Award.',
+          desc: 'Architected scalable risk-advisory software solutions for Fortune 500 clients. Leveraged Spring Boot and AWS to automate compliance tracking workflows, earning the Deloitte Outstanding Performance Award for reducing client data processing latency by 35%.',
         },
         {
           title: 'Associate Software Engineer',
           period: 'Jun 2019 - Apr 2021',
-          desc: 'Served large risk and financial advisory clients with high efficiency. Gained valuable insights into risk management, financial advisory frameworks, and scaled technical delivery.',
+          desc: 'Developed backend APIs and data-ingestion pipelines using Java, Spring Boot, and Hibernate JPA. Supported database migrations and system integration tests, ensuring high availability for financial advisory platforms serving risk-sensitive clients.',
         },
         {
           title: 'Software Engineer - Intern',
           period: 'Jan 2019 - Mar 2019',
-          desc: 'Led a team of 15 talented interns in developing a Fog computing and affective computing business use case, presenting it to industry leaders with highly positive feedback.',
+          desc: 'Led a team of 15 interns in developing a Fog and affective computing business prototype, showcasing integration architecture to Deloitte directors.',
         },
       ],
     },
@@ -54,7 +66,7 @@ export default function Experience() {
             <div className="section-subtitle">Journey</div>
             <h2 className="section-title" style={{ fontSize: '3rem', marginBottom: '1.5rem' }}>Experience</h2>
             <p style={{ color: 'var(--text-secondary)', lineHeight: 1.6, fontSize: '0.95rem', marginBottom: '2.5rem' }}>
-              Over 3 years of building resilient backend architectures, scalable web apps, and mentoring engineering cohorts.
+              Designing resilient backend architectures, high-throughput data pipelines, and leading engineering cohorts at Amazon and Deloitte.
             </p>
             <div>
               <a 

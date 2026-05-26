@@ -135,9 +135,9 @@ export default function Hero() {
               maxWidth: '600px',
             }}
           >
-            A results-driven Computer Science graduate and Full-Stack Software Engineer with 
-            over 3 years of experience crafting robust, scalable, and premium web solutions. 
-            Focused on building high-performance architectures and engaging user interfaces.
+            A Software Development Engineer (SDE) at Amazon with over 4 years of experience 
+            crafting robust, scalable backend architectures and premium web applications. 
+            Focused on combining engineering rigor with high-end digital design.
           </motion.p>
 
           {/* CTAs */}

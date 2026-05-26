@@ -10,6 +10,12 @@ interface Achievement {
 export default function Achievements() {
   const achievements: Achievement[] = [
     {
+      date: '08 Jul, 2024',
+      title: 'Joined Amazon as SDE',
+      desc: 'Began working as a Software Development Engineer at Amazon, joining the Sustainability Technology team to build global auditing record systems and worker remediation tooling. 🚀',
+      image: '/images/logo-amazon.png',
+    },
+    {
       date: '04 May, 2024',
       title: 'Mastering My Masters',
       desc: 'Officially graduated with a Master\'s degree in Computer Science from Arizona State University. Celebrating this milestone and embracing new adventures! 🎓🎉',

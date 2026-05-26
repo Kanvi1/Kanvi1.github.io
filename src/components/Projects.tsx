@@ -26,7 +26,7 @@ export default function Projects() {
     {
       title: 'Makershala',
       subtitle: 'STEM Learning Portal',
-      desc: 'Launched an online learning platform focused on STEM subjects, designed for kids aged 8 to 16. Handled complete UI design and application development. Provides an interactive environment for exploring interests, developing practical skillsets, and building a foundation in engineering/science.',
+      desc: 'Designed and engineered a full-stack online learning system focused on STEM curricula for students aged 8-16. Implemented interactive lessons and progress dashboards using PHP, MySQL, and Bootstrap, scaling the platform to support modular user onboarding.',
       image: '/images/work-001.png',
       tags: ['HTML', 'Bootstrap', 'PHP', 'MySQL'],
       category: ['web'],
@@ -44,7 +44,7 @@ export default function Projects() {
     {
       title: 'Bugs Eye',
       subtitle: 'Bug Tracking Application',
-      desc: 'A robust 3-tier web application designed to optimize bug resolution tracking. Boosted cross-team collaboration and efficiency by simplifying bug lifecycle tracking, leading to an impressive 80% reduction in re-work across development pipelines.',
+      desc: 'A secure 3-tier issue tracking platform engineered with Java Spring Boot and deployed on AWS. Automated bug lifecycle stages and notifications, reducing pipeline communication overhead and code re-work by 80%.',
       image: '/images/work-003.png',
       tags: ['Java', 'Spring Boot', 'AWS', 'MySQL'],
       category: ['web'],

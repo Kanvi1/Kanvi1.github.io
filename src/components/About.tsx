@@ -84,7 +84,7 @@ export default function About() {
                 color: 'var(--text-secondary)',
               }}
             >
-              I am a results-driven Computer Science graduate with over 3 years of professional full-stack development experience. My expertise lies in architecting robust, scalable web systems using Java, Spring Boot, JavaScript, Node.js, and cloud ecosystems (AWS).
+              I am a results-driven Software Development Engineer (SDE) at Amazon with over 4 years of professional full-stack engineering experience. My expertise lies in architecting robust web systems, global supplier auditing portals, and high-throughput data pipelines using Java, Spring Boot, Node.js, and AWS.
             </p>
             
             <p
@@ -94,7 +94,7 @@ export default function About() {
                 color: 'var(--text-secondary)',
               }}
             >
-              With a Master's degree in Computer Science from Arizona State University, I excel at combining engineering precision with modern design aesthetics to resolve complex challenges and deliver high-performance applications.
+              With a Master's degree in Computer Science from Arizona State University, I excel at combining backend engineering precision with clean UI design to build systems that solve human risk, sustainability, and compliance challenges at scale.
             </p>
 
             {/* Social Icons & Contact Link */}
