@@ -1,214 +1,150 @@
-import { useState, useEffect } from 'react';
-import { ArrowRight, Mail } from 'lucide-react';
-import { motion } from 'framer-motion';
+import { ArrowDown, ArrowRight, Mail } from 'lucide-react';
+import { motion } from 'motion/react';
+import FlowField from '@/components/kokonutui/flow-field';
+import DynamicText from '@/components/kokonutui/dynamic-text';
+import { profile, yearsOfExperience } from '@/data/content';
 
 export default function Hero() {
-  const roles = ["Full-Stack Developer", "Designer", "Problem Solver"];
-  const [roleIndex, setRoleIndex] = useState(0);
-  const [displayText, setDisplayText] = useState('');
-  const [isDeleting, setIsDeleting] = useState(false);
-
-  useEffect(() => {
-    let timer: ReturnType<typeof setTimeout>;
-    const currentRole = roles[roleIndex];
-    const typingSpeed = isDeleting ? 40 : 100;
-
-    if (!isDeleting && displayText === currentRole) {
-      // Pause at full text
-      timer = setTimeout(() => setIsDeleting(true), 2000);
-    } else if (isDeleting && displayText === '') {
-      setIsDeleting(false);
-      setRoleIndex((prev) => (prev + 1) % roles.length);
-    } else {
-      timer = setTimeout(() => {
-        setDisplayText(
-          isDeleting
-            ? currentRole.substring(0, displayText.length - 1)
-            : currentRole.substring(0, displayText.length + 1)
-        );
-      }, typingSpeed);
-    }
-
-    return () => clearTimeout(timer);
-  }, [displayText, isDeleting, roleIndex]);
+  const totalYears = yearsOfExperience();
 
   return (
     <section
       id="home"
-      style={{
-        minHeight: '100vh',
-        display: 'flex',
-        alignItems: 'center',
-        position: 'relative',
-        paddingTop: '6rem',
-        overflow: 'hidden',
-      }}
+      className="relative flex min-h-screen items-center overflow-hidden pt-28 pb-16 sm:pt-32"
     >
-      <div className="container">
-        <div
-          style={{
-            maxWidth: '800px',
-            position: 'relative',
-            zIndex: 10,
-          }}
-        >
-          {/* Greeting */}
+      {/* Kokonut UI Interactive FlowField Canvas */}
+      <FlowField
+        density={2.0}
+        speed={0.9}
+        interactive
+        className="text-foreground/35 dark:text-foreground/45"
+      />
+
+      {/* Radial vignette so typography stays crisp over streamlines */}
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_25%,var(--background)_92%)]"
+      />
+
+      <div className="relative z-10 mx-auto w-full max-w-6xl px-6">
+        <div className="max-w-3xl">
+          {/* Status Pill */}
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
+            initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
-            style={{
-              fontSize: '0.75rem',
-              fontFamily: 'var(--font-mono)',
-              fontWeight: 600,
-              color: 'var(--accent)',
-              textTransform: 'uppercase',
-              letterSpacing: '0.2em',
-              marginBottom: '1rem',
-            }}
+            transition={{ duration: 0.45 }}
+            className="mb-6 inline-flex items-center gap-2.5 rounded-full border border-border bg-card/80 px-3.5 py-1.5 font-mono text-xs tracking-wider text-muted-foreground uppercase backdrop-blur-md"
           >
-            👋 Hello there, I am
+            <span className="relative flex size-2">
+              <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-primary opacity-75" />
+              <span className="relative inline-flex size-2 rounded-full bg-primary" />
+            </span>
+            SDE at {profile.company} · Sustainability Tech
           </motion.div>
 
-          {/* Name */}
+          {/* Classy, restrained Name */}
           <motion.h1
-            initial={{ opacity: 0, y: 20 }}
+            initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.1 }}
-            style={{
-              fontSize: 'clamp(3.5rem, 10vw, 6.5rem)',
-              fontWeight: 800,
-              fontFamily: 'var(--font-sans)',
-              letterSpacing: '-0.04em',
-              lineHeight: 0.95,
-              marginBottom: '2rem',
-            }}
+            transition={{ duration: 0.5, delay: 0.08 }}
+            className="text-4xl font-bold tracking-tight text-foreground sm:text-5xl lg:text-6xl"
           >
-            Vishal <span style={{
-              fontFamily: 'var(--font-serif)',
-              fontStyle: 'italic',
-              fontWeight: 400,
-            }}>Kanwar</span>
+            {profile.firstName} {profile.lastName}
           </motion.h1>
 
-          {/* Typing Text */}
+          {/* Dynamic Morphing Subtitle */}
           <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.5, delay: 0.2 }}
-            style={{
-              fontSize: 'clamp(1rem, 3vw, 1.25rem)',
-              fontFamily: 'var(--font-mono)',
-              color: 'var(--text-secondary)',
-              height: '2.5rem',
-              marginBottom: '2rem',
-              display: 'flex',
-              alignItems: 'center',
-              textTransform: 'uppercase',
-              letterSpacing: '0.1em',
-            }}
+            initial={{ opacity: 0, y: 14 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.16 }}
+            className="mt-4 flex flex-wrap items-baseline gap-x-2.5 text-xl font-medium text-muted-foreground sm:text-2xl"
           >
-            <span>I'm a&nbsp;</span>
-            <span style={{ color: 'var(--text-primary)', fontWeight: 700 }}>{displayText}</span>
-            <span
-              style={{
-                display: 'inline-block',
-                width: '2px',
-                height: '1.1em',
-                backgroundColor: 'var(--accent)',
-                marginLeft: '6px',
-                animation: 'blink 0.8s infinite',
-              }}
+            <span>Architecting</span>
+            <DynamicText
+              mode="morph"
+              words={[...profile.heroWords]}
+              interval={2400}
+              className="font-semibold text-foreground"
             />
           </motion.div>
 
-          {/* Description */}
+          {/* Concise Bio */}
           <motion.p
-            initial={{ opacity: 0, y: 20 }}
+            initial={{ opacity: 0, y: 14 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.3 }}
-            style={{
-              fontSize: '1.15rem',
-              color: 'var(--text-secondary)',
-              lineHeight: 1.7,
-              marginBottom: '2.5rem',
-              maxWidth: '600px',
-            }}
+            transition={{ duration: 0.5, delay: 0.24 }}
+            className="mt-6 max-w-xl text-base leading-relaxed text-muted-foreground sm:text-lg"
           >
-            A Software Development Engineer (SDE) at Amazon with over 4 years of experience 
-            crafting robust, scalable backend architectures and premium web applications. 
-            Focused on combining engineering rigor with high-end digital design.
+            Software Development Engineer with {totalYears}+ years of experience building global
+            compliance platforms, high-throughput data pipelines, and thoughtful user interfaces.
+            M.S. in Computer Science from Arizona State University.
           </motion.p>
 
           {/* CTAs */}
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
+            initial={{ opacity: 0, y: 14 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.4 }}
-            style={{
-              display: 'flex',
-              flexWrap: 'wrap',
-              gap: '1rem',
-            }}
+            transition={{ duration: 0.5, delay: 0.32 }}
+            className="mt-8 flex flex-wrap items-center gap-3"
           >
-            <a href="#projects" className="btn btn-primary hoverable">
-              Explore Projects <ArrowRight size={18} />
+            <a
+              href="#projects"
+              onClick={(e) => {
+                e.preventDefault();
+                document.getElementById('projects')?.scrollIntoView({ behavior: 'smooth' });
+              }}
+              className="inline-flex items-center gap-2 rounded-xl bg-primary px-5 py-3 text-sm font-semibold text-primary-foreground shadow-sm transition-transform hover:-translate-y-0.5 active:translate-y-0"
+            >
+              Explore Work
+              <ArrowRight className="size-4" />
             </a>
-            <a href="#contact" className="btn btn-secondary hoverable">
-              Get in Touch <Mail size={18} />
+            <a
+              href="#contact"
+              onClick={(e) => {
+                e.preventDefault();
+                document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' });
+              }}
+              className="inline-flex items-center gap-2 rounded-xl border border-border bg-card/80 px-5 py-3 text-sm font-semibold text-foreground backdrop-blur-md transition-colors hover:border-primary/50"
+            >
+              <Mail className="size-4" />
+              Get in Touch
             </a>
+          </motion.div>
+
+          {/* Compact Telemetry Strip */}
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.6, delay: 0.45 }}
+            className="mt-12 grid max-w-lg grid-cols-3 gap-6 border-t border-border pt-6"
+          >
+            <div>
+              <div className="font-mono text-2xl font-bold text-foreground">{totalYears}+ yrs</div>
+              <div className="mt-0.5 text-xs text-muted-foreground">Production Eng</div>
+            </div>
+            <div>
+              <div className="font-mono text-2xl font-bold text-foreground">2× AWS</div>
+              <div className="mt-0.5 text-xs text-muted-foreground">SA &amp; Developer</div>
+            </div>
+            <div>
+              <div className="font-mono text-2xl font-bold text-foreground">4.0 GPA</div>
+              <div className="mt-0.5 text-xs text-muted-foreground">M.S. CS @ ASU</div>
+            </div>
           </motion.div>
         </div>
       </div>
 
-      {/* Animated Scroll Down Indicator */}
-      <motion.div
-        animate={{
-          y: [0, 10, 0],
-        }}
-        transition={{
-          duration: 1.5,
-          repeat: Infinity,
-          ease: 'easeInOut',
-        }}
-        style={{
-          position: 'absolute',
-          bottom: '2.5rem',
-          left: '50%',
-          transform: 'translateX(-50%)',
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-          gap: '0.5rem',
-          color: 'var(--text-muted)',
-          fontSize: '0.85rem',
-          cursor: 'pointer',
-          zIndex: 10,
-        }}
+      {/* Scroll Down Cue */}
+      <motion.button
+        type="button"
+        aria-label="Scroll to About"
         onClick={() => document.getElementById('about')?.scrollIntoView({ behavior: 'smooth' })}
-        className="hoverable"
+        animate={{ y: [0, 6, 0] }}
+        transition={{ duration: 1.8, repeat: Infinity, ease: 'easeInOut' }}
+        className="absolute bottom-6 left-1/2 z-10 -translate-x-1/2 rounded-full border border-border bg-card/70 p-2.5 text-muted-foreground backdrop-blur-md transition-colors hover:text-foreground"
       >
-        <span>Scroll Down</span>
-        <svg
-          width="20"
-          height="20"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="2"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-        >
-          <path d="M12 5v14M19 12l-7 7-7-7" />
-        </svg>
-      </motion.div>
-
-      <style>{`
-        @keyframes blink {
-          0%, 100% { opacity: 1; }
-          50% { opacity: 0; }
-        }
-      `}</style>
+        <ArrowDown className="size-4" />
+      </motion.button>
     </section>
   );
 }

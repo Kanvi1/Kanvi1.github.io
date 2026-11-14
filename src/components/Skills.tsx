@@ -1,151 +1,85 @@
-import { motion } from 'framer-motion';
-import { Code, Globe, Database, Award } from 'lucide-react';
+import { motion } from 'motion/react';
+import { Award, Cloud, Code2, Layers, Wrench } from 'lucide-react';
+import { certifications, skillGroups } from '@/data/content';
+
+const GROUP_ICONS = [Code2, Cloud, Layers, Wrench];
 
 export default function Skills() {
-  const skillCategories = [
-    {
-      title: 'Languages & Frameworks',
-      icon: <Code size={24} style={{ color: 'var(--accent)' }} />,
-      skills: ['Java', 'JavaScript', 'Python', 'C#', 'SQL', 'Spring Boot/MVC', 'Node.js', 'Express.js', 'Hibernate JPA'],
-    },
-    {
-      title: 'Frontend & UI Design',
-      icon: <Globe size={24} style={{ color: 'var(--accent)' }} />,
-      skills: [
-        'React',
-        'HTML5',
-        'CSS3',
-        'Sass',
-        'jQuery',
-        'Bootstrap',
-        'Figma',
-        'Semantic UI',
-      ],
-    },
-    {
-      title: 'Cloud, DevOps & Databases',
-      icon: <Database size={24} style={{ color: 'var(--accent)' }} />,
-      skills: [
-        'AWS',
-        'Docker',
-        'Jenkins',
-        'MySQL',
-        'MongoDB',
-        'Git & GitHub',
-        'SVN',
-        'Jira',
-        'JMeter',
-      ],
-    },
-    {
-      title: 'Certifications',
-      icon: <Award size={24} style={{ color: 'var(--accent)' }} />,
-      skills: [
-        'AWS Solutions Architect Associate',
-        'AWS Developer Associate',
-        'Certified Scrum Master',
-      ],
-    },
-  ];
-
-  const containerVariants = {
-    hidden: {},
-    visible: {
-      transition: {
-        staggerChildren: 0.1,
-      },
-    },
-  };
-
-  const cardVariants = {
-    hidden: { opacity: 0, y: 20 },
-    visible: { opacity: 1, y: 0, transition: { duration: 0.5 } },
-  };
-
   return (
-    <section id="skills" style={{ padding: '10rem 0 6rem 0', position: 'relative' }}>
-      <div className="container">
-        <div className="section-grid">
-          
-          {/* Sticky Left Column */}
-          <div className="sticky-header">
-            <div className="section-subtitle">Expertise</div>
-            <h2 className="section-title" style={{ fontSize: '3rem', marginBottom: '1.5rem' }}>Skills & Tech</h2>
-            <p style={{ color: 'var(--text-secondary)', lineHeight: 1.6, fontSize: '0.95rem' }}>
-              A curated catalog of my engineering toolkit, spanning backend architectures, cloud ecosystems, database engineering, and modern web applications.
+    <section id="skills" className="relative border-t border-border py-24 sm:py-32">
+      <div className="mx-auto max-w-6xl px-6">
+        <div className="grid gap-12 lg:grid-cols-[0.85fr_1.15fr]">
+          {/* Sticky Left Header */}
+          <div className="lg:sticky lg:top-28 lg:self-start">
+            <div className="font-mono text-xs font-semibold tracking-[0.2em] text-primary uppercase">
+              04 / Toolkit
+            </div>
+            <h2 className="mt-2 text-3xl font-bold tracking-tight text-foreground sm:text-5xl">
+              Skills &amp; Tech
+            </h2>
+            <p className="mt-4 max-w-sm text-base leading-relaxed text-muted-foreground">
+              A practical engineering toolkit spanning backend services, cloud infrastructure,
+              data pipelines, and front-end craft.
             </p>
+
+            {/* Certifications Strip */}
+            <div className="mt-8 space-y-2.5">
+              <div className="font-mono text-[11px] font-semibold tracking-wider text-muted-foreground uppercase">
+                Verified Certifications
+              </div>
+              {certifications.map((cert) => (
+                <div
+                  key={cert.name}
+                  className="flex items-center justify-between gap-3 rounded-xl border border-border bg-card px-4 py-2.5"
+                >
+                  <div className="flex items-center gap-2.5">
+                    <Award className="size-4 shrink-0 text-primary" />
+                    <span className="text-xs font-medium text-foreground">{cert.name}</span>
+                  </div>
+                  <span className="font-mono text-[11px] text-muted-foreground">{cert.year}</span>
+                </div>
+              ))}
+            </div>
           </div>
 
-          {/* Flowing Right Column */}
-          <motion.div
-            variants={containerVariants}
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true, margin: '-100px' }}
-            style={{
-              display: 'flex',
-              flexDirection: 'column',
-              gap: '2rem',
-            }}
-          >
-            {skillCategories.map((category, idx) => (
-              <motion.div
-                key={idx}
-                variants={cardVariants}
-                className="glass-card hoverable"
-                style={{
-                  display: 'flex',
-                  flexDirection: 'column',
-                  gap: '1.25rem',
-                }}
-              >
-                {/* Category Header */}
-                <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
-                  <div
-                    style={{
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      width: '2.5rem',
-                      height: '2.5rem',
-                      backgroundColor: 'var(--accent-glow)',
-                    }}
-                  >
-                    {category.icon}
-                  </div>
-                  <h3 style={{ fontSize: '1.15rem', fontWeight: 700, fontFamily: 'var(--font-sans)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
-                    {category.title}
-                  </h3>
-                </div>
-
-                {/* Skills Tags */}
-                <div
-                  style={{
-                    display: 'flex',
-                    flexWrap: 'wrap',
-                    gap: '0.6rem',
-                  }}
+          {/* Right Bento Grid */}
+          <div className="grid gap-4 sm:grid-cols-2">
+            {skillGroups.map((group, idx) => {
+              const Icon = GROUP_ICONS[idx] ?? Code2;
+              return (
+                <motion.div
+                  key={group.title}
+                  initial={{ opacity: 0, y: 18 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true, margin: '-80px' }}
+                  transition={{ duration: 0.4, delay: idx * 0.06 }}
+                  className="flex flex-col justify-between rounded-2xl border border-border bg-card p-6 transition-colors hover:border-primary/40"
                 >
-                  {category.skills.map((skill, skillIdx) => (
-                    <motion.span
-                      key={skillIdx}
-                      whileHover={{ borderColor: 'var(--accent)', color: 'var(--text-primary)' }}
-                      className="tag hoverable"
-                      style={{
-                        cursor: 'default',
-                        padding: '0.35rem 0.85rem',
-                        fontSize: '0.75rem',
-                        transition: 'all 0.2s ease',
-                      }}
-                    >
-                      {skill}
-                    </motion.span>
-                  ))}
-                </div>
-              </motion.div>
-            ))}
-          </motion.div>
+                  <div>
+                    <div className="mb-4 flex items-center gap-3">
+                      <div className="flex size-9 items-center justify-center rounded-xl bg-primary/10 text-primary">
+                        <Icon className="size-4" />
+                      </div>
+                      <h3 className="text-base font-bold tracking-tight text-foreground">
+                        {group.title}
+                      </h3>
+                    </div>
 
+                    <div className="flex flex-wrap gap-2">
+                      {group.items.map((item) => (
+                        <span
+                          key={item}
+                          className="rounded-lg border border-border bg-secondary/60 px-2.5 py-1 font-mono text-xs text-foreground transition-colors hover:border-primary/50"
+                        >
+                          {item}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                </motion.div>
+              );
+            })}
+          </div>
         </div>
       </div>
     </section>

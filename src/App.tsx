@@ -1,74 +1,47 @@
-import { useState, useEffect } from 'react';
-import CustomCursor from './components/CustomCursor';
+import { useEffect, useState } from 'react';
 import Navbar from './components/Navbar';
 import Hero from './components/Hero';
 import About from './components/About';
-import Skills from './components/Skills';
 import Experience from './components/Experience';
 import Projects from './components/Projects';
+import Skills from './components/Skills';
 import Achievements from './components/Achievements';
 import Testimonials from './components/Testimonials';
 import Contact from './components/Contact';
-import AnimatedBackground from './components/AnimatedBackground';
 
 export default function App() {
-  const [theme, setTheme] = useState<'dark' | 'light'>('dark');
-
-  // Load theme from localStorage on mount
-  useEffect(() => {
-    const savedTheme = localStorage.getItem('theme') as 'dark' | 'light' | null;
-    if (savedTheme) {
-      setTheme(savedTheme);
-      document.documentElement.setAttribute('data-theme', savedTheme);
-    } else {
-      document.documentElement.setAttribute('data-theme', 'dark');
+  const [theme, setTheme] = useState<'dark' | 'light'>(() => {
+    try {
+      const saved = localStorage.getItem('theme');
+      return saved === 'light' || saved === 'dark' ? saved : 'dark';
+    } catch {
+      return 'dark';
     }
-  }, []);
+  });
 
-  const toggleTheme = () => {
-    const newTheme = theme === 'dark' ? 'light' : 'dark';
-    setTheme(newTheme);
-    localStorage.setItem('theme', newTheme);
-    document.documentElement.setAttribute('data-theme', newTheme);
-  };
+  useEffect(() => {
+    document.documentElement.classList.toggle('dark', theme === 'dark');
+    document.documentElement.setAttribute('data-theme', theme);
+    try {
+      localStorage.setItem('theme', theme);
+    } catch {
+      // ignore storage errors
+    }
+  }, [theme]);
 
   return (
-    <>
-      {/* Animated Shader Mesh Background */}
-      <AnimatedBackground />
-
-      {/* Custom Mouse Cursor */}
-      <CustomCursor theme={theme} />
-
-      {/* Navigation Menu */}
-      <Navbar theme={theme} toggleTheme={toggleTheme} />
-
-      {/* Content Layout */}
+    <div className="min-h-screen bg-background text-foreground antialiased">
+      <Navbar theme={theme} onThemeChange={setTheme} />
       <main>
-        {/* Hero Landing */}
         <Hero />
-
-        {/* Bio Details */}
         <About />
-
-        {/* Core Expertise */}
-        <Skills />
-
-        {/* Professional Milestones */}
         <Experience />
-
-        {/* Portfolio Showcase */}
         <Projects />
-
-        {/* Wins / Accomplishments */}
+        <Skills />
         <Achievements />
-
-        {/* Recommendations / Quotes */}
         <Testimonials />
-
-        {/* Feedback / Send Formspree Message */}
         <Contact />
       </main>
-    </>
+    </div>
   );
 }

@@ -1,288 +1,110 @@
-import { motion } from 'framer-motion';
-import { Briefcase, Calendar } from 'lucide-react';
+import { motion } from 'motion/react';
+import { Briefcase, Calendar, ExternalLink } from 'lucide-react';
+import { experiences, profile } from '@/data/content';
 
 export default function Experience() {
-  const getAmazonDuration = () => {
-    const startDate = new Date('2024-07-08');
-    const currentDate = new Date();
-    if (currentDate < startDate) return '0 mos';
-
-    let years = currentDate.getFullYear() - startDate.getFullYear();
-    let months = currentDate.getMonth() - startDate.getMonth();
-
-    if (currentDate.getDate() < startDate.getDate()) {
-      months--;
-    }
-
-    if (months < 0) {
-      years--;
-      months += 12;
-    }
-
-    const yearsStr = years > 0 ? `${years} yr${years > 1 ? 's' : ''}` : '';
-    const monthsStr = months > 0 ? `${months} mo${months > 1 ? 's' : ''}` : '';
-
-    if (yearsStr && monthsStr) {
-      return `${yearsStr} ${monthsStr}`;
-    }
-    return yearsStr || monthsStr || '0 mos';
-  };
-
-  const experiences = [
-    {
-      company: 'Amazon',
-      logo: '/images/logo-amazon.png',
-      duration: getAmazonDuration(),
-      positions: [
-        {
-          title: 'Software Development Engineer (SDE)',
-          period: 'Jul 2024 - Present',
-          desc: 'Architect and maintain global compliance web platforms and high-throughput data pipelines within the Sustainability Technology organization. Support the Human Risk and Social Impact (HRSI) team by building technical systems to manage, audit, and remediate workplace safety and human rights compliance records for thousands of suppliers worldwide, protecting workers from operational risks.',
-        },
-      ],
-    },
-    {
-      company: 'Deloitte',
-      logo: '/images/logo-deloitte-2.jpg',
-      duration: '3 yrs 5 mos',
-      positions: [
-        {
-          title: 'Senior Software Engineer',
-          period: 'May 2022 - Jul 2022',
-          desc: 'Led a team of 3 junior developers to design, develop, and deliver high-impact compliance and risk modules. Streamlined API integrations and code review practices, increasing sprint velocity by 20% while ensuring zero regulatory defects.',
-        },
-        {
-          title: 'Software Engineer I',
-          period: 'May 2021 - May 2022',
-          desc: 'Architected scalable risk-advisory software solutions for Fortune 500 clients. Leveraged Spring Boot and AWS to automate compliance tracking workflows, earning the Deloitte Outstanding Performance Award for reducing client data processing latency by 35%.',
-        },
-        {
-          title: 'Associate Software Engineer',
-          period: 'Jun 2019 - Apr 2021',
-          desc: 'Developed backend APIs and data-ingestion pipelines using Java, Spring Boot, and Hibernate JPA. Supported database migrations and system integration tests, ensuring high availability for financial advisory platforms serving risk-sensitive clients.',
-        },
-        {
-          title: 'Software Engineer - Intern',
-          period: 'Jan 2019 - Mar 2019',
-          desc: 'Led a team of 15 interns in developing a Fog and affective computing business prototype, showcasing integration architecture to Deloitte directors.',
-        },
-      ],
-    },
-    {
-      company: 'Mages Studios',
-      logo: '/images/logo-mages.jpg',
-      duration: '3 mos',
-      positions: [
-        {
-          title: 'Software Engineer - Intern',
-          period: 'Jun 2018 - Aug 2018',
-          desc: 'Led a collaborative team of four members, spearheading the design and development of captivating AR and VR projects. Conducted user research, mapped narratives via storyboards, and developed 3D immersive VR experiences for cancer patients. Implemented an engaging ARCore-based scholarly app.',
-        },
-      ],
-    },
-  ];
-
   return (
-    <section id="experience" style={{ padding: '10rem 0 6rem 0', position: 'relative' }}>
-      <div className="container">
-        <div className="section-grid">
-          
-          {/* Sticky Left Column */}
-          <div className="sticky-header">
-            <div className="section-subtitle">Journey</div>
-            <h2 className="section-title" style={{ fontSize: '3rem', marginBottom: '1.5rem' }}>Experience</h2>
-            <p style={{ color: 'var(--text-secondary)', lineHeight: 1.6, fontSize: '0.95rem', marginBottom: '2.5rem' }}>
-              Designing resilient backend architectures, high-throughput data pipelines, and leading engineering cohorts at Amazon and Deloitte.
+    <section id="experience" className="relative border-t border-border py-24 sm:py-32">
+      <div className="mx-auto max-w-6xl px-6">
+        <div className="grid gap-12 lg:grid-cols-[0.85fr_1.15fr]">
+          {/* Sticky Left Header */}
+          <div className="lg:sticky lg:top-28 lg:self-start">
+            <div className="font-mono text-xs font-semibold tracking-[0.2em] text-primary uppercase">
+              02 / Journey
+            </div>
+            <h2 className="mt-2 text-3xl font-bold tracking-tight text-foreground sm:text-5xl">
+              Experience
+            </h2>
+            <p className="mt-4 max-w-sm text-base leading-relaxed text-muted-foreground">
+              Designing resilient backend architectures, high-throughput data pipelines, and
+              leading engineering cohorts at Amazon and Deloitte.
             </p>
-            <div>
-              <a 
-                href="https://github.com/Kanvi1"
+            <div className="mt-6">
+              <a
+                href={profile.socials.github}
                 target="_blank"
                 rel="noreferrer"
-                className="btn btn-secondary hoverable"
+                className="inline-flex items-center gap-2 rounded-xl border border-border bg-card px-4 py-2.5 font-mono text-xs font-semibold text-foreground transition-colors hover:border-primary/60"
               >
                 Explore GitHub
+                <ExternalLink className="size-3.5" />
               </a>
             </div>
           </div>
 
-          {/* Flowing Right Column */}
-          <div
-            style={{
-              position: 'relative',
-              display: 'flex',
-              flexDirection: 'column',
-              gap: '4rem',
-            }}
-          >
-            {/* Timeline Line */}
+          {/* Right Timeline */}
+          <div className="relative space-y-12 pl-6 sm:pl-8">
+            {/* Vertical Line */}
             <div
-              style={{
-                position: 'absolute',
-                left: '1.25rem',
-                top: '1.5rem',
-                bottom: '1.5rem',
-                width: '1px',
-                background: 'linear-gradient(to bottom, var(--accent) 0%, var(--border-color) 100%)',
-                zIndex: 1,
-              }}
-              className="timeline-line"
+              aria-hidden="true"
+              className="absolute top-3 bottom-3 left-[19px] w-px bg-gradient-to-b from-primary via-border to-transparent sm:left-[23px]"
             />
 
-            {experiences.map((exp, companyIdx) => (
-              <motion.div
-                key={companyIdx}
-                initial={{ opacity: 0, y: 40 }}
+            {experiences.map((exp, idx) => (
+              <motion.article
+                key={exp.company}
+                initial={{ opacity: 0, y: 24 }}
                 whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, margin: '-100px' }}
-                transition={{ duration: 0.5, delay: companyIdx * 0.1 }}
-                style={{
-                  position: 'relative',
-                  zIndex: 2,
-                  display: 'grid',
-                  gridTemplateColumns: 'auto 1fr',
-                  gap: '2rem',
-                }}
+                viewport={{ once: true, margin: '-80px' }}
+                transition={{ duration: 0.45, delay: idx * 0.08 }}
+                className="relative pl-8 sm:pl-10"
               >
-                {/* Timeline Square Bullet (Company Logo) */}
-                <div
-                  style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    width: '2.5rem',
-                    height: '2.5rem',
-                    backgroundColor: 'var(--bg-secondary)',
-                    border: '1px solid var(--border-color)',
-                    overflow: 'hidden',
-                  }}
-                  className="timeline-bullet"
-                >
+                {/* Company Logo Node */}
+                <div className="absolute top-0 -left-6 flex size-10 items-center justify-center overflow-hidden rounded-xl border border-border bg-card shadow-sm sm:-left-8 sm:size-12">
                   {exp.logo ? (
                     <img
                       src={exp.logo}
                       alt={exp.company}
-                      style={{ width: '100%', height: '100%', objectFit: 'cover' }}
-                      onError={(e) => {
-                        const target = e.target as HTMLElement;
-                        target.style.display = 'none';
-                      }}
+                      className="size-full object-cover"
                     />
                   ) : (
-                    <Briefcase size={16} style={{ color: 'var(--accent)' }} />
+                    <Briefcase className="size-4 text-primary" />
                   )}
                 </div>
 
-                {/* Experience Details Card */}
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
-                  <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'baseline', justifyContent: 'space-between', gap: '0.5rem' }}>
-                    <h3 style={{ fontSize: '1.5rem', fontWeight: 700, color: 'var(--text-primary)', fontFamily: 'var(--font-sans)', letterSpacing: '-0.02em' }}>
+                {/* Company Header */}
+                <div className="flex flex-wrap items-baseline justify-between gap-2">
+                  <div>
+                    <h3 className="text-2xl font-bold tracking-tight text-foreground">
                       {exp.company}
                     </h3>
-                    <span style={{ fontSize: '0.75rem', fontFamily: 'var(--font-mono)', color: 'var(--accent)', fontWeight: 700 }}>
-                      {exp.duration}
-                    </span>
-                  </div>
-
-                  {/* Sub-positions Timeline */}
-                  <div style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }} className="positions-container">
-                    {exp.positions.map((pos, posIdx) => (
-                      <div
-                        key={posIdx}
-                        style={{
-                          position: 'relative',
-                          paddingLeft: '1.25rem',
-                          borderLeft: '1px solid var(--border-color)',
-                        }}
-                        className="position-item"
-                      >
-                        {/* Sub-bullet (Accent color square) */}
-                        <div
-                          style={{
-                            position: 'absolute',
-                            left: '-3.5px',
-                            top: '6px',
-                            width: '6px',
-                            height: '6px',
-                            backgroundColor: 'var(--accent)',
-                          }}
-                        />
-
-                        <div
-                          style={{
-                            display: 'flex',
-                            flexDirection: 'column',
-                            gap: '0.25rem',
-                          }}
-                        >
-                          <h4
-                            style={{
-                              fontSize: '1.05rem',
-                              fontWeight: 700,
-                              color: 'var(--text-primary)',
-                            }}
-                          >
-                            {pos.title}
-                          </h4>
-                          <div
-                            style={{
-                              display: 'flex',
-                              alignItems: 'center',
-                              gap: '0.5rem',
-                              color: 'var(--text-muted)',
-                              fontSize: '0.75rem',
-                              fontFamily: 'var(--font-mono)',
-                              fontWeight: 500,
-                              marginTop: '0.1rem',
-                            }}
-                          >
-                            <Calendar size={12} />
-                            <span>{pos.period}</span>
-                          </div>
-                          <p
-                            style={{
-                              color: 'var(--text-secondary)',
-                              lineHeight: 1.6,
-                              fontSize: '0.92rem',
-                              marginTop: '0.5rem',
-                            }}
-                          >
-                            {pos.desc}
-                          </p>
-                        </div>
+                    {exp.team && (
+                      <div className="mt-0.5 font-mono text-xs text-muted-foreground">
+                        {exp.team}
                       </div>
-                    ))}
+                    )}
                   </div>
+                  <span className="rounded-md bg-primary/10 px-2.5 py-1 font-mono text-xs font-semibold text-primary">
+                    {exp.duration()}
+                  </span>
                 </div>
-              </motion.div>
+
+                {/* Positions */}
+                <div className="mt-6 space-y-6 border-l border-border pl-5">
+                  {exp.positions.map((pos) => (
+                    <div key={`${exp.company}-${pos.title}`} className="relative">
+                      <span
+                        aria-hidden="true"
+                        className="absolute top-2 -left-[24px] size-2 rounded-full bg-primary ring-4 ring-background"
+                      />
+                      <h4 className="text-base font-semibold text-foreground">
+                        {pos.title}
+                      </h4>
+                      <div className="mt-1 flex items-center gap-1.5 font-mono text-xs text-muted-foreground">
+                        <Calendar className="size-3" />
+                        <span>{pos.period}</span>
+                      </div>
+                      <p className="mt-2.5 text-sm leading-relaxed text-muted-foreground">
+                        {pos.desc}
+                      </p>
+                    </div>
+                  ))}
+                </div>
+              </motion.article>
             ))}
           </div>
-
         </div>
       </div>
-
-      <style>{`
-        @media (max-width: 600px) {
-          .timeline-line {
-            left: 1.25rem !important;
-          }
-          .timeline-bullet {
-            width: 2.5rem !important;
-            height: 2.5rem !important;
-          }
-          .timeline-bullet svg {
-            width: 16px !important;
-            height: 16px !important;
-          }
-          .timeline-bullet img {
-            width: 100% !important;
-            height: 100% !important;
-          }
-          .timeline-bullet + div {
-            gap: 1.25rem !important;
-          }
-        }
-      `}</style>
     </section>
   );
 }

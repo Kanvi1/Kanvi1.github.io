@@ -1,180 +1,150 @@
-import { Quote } from 'lucide-react';
-import React from 'react';
+import { useEffect, useState } from 'react';
+import { AnimatePresence, motion } from 'motion/react';
+import { ChevronLeft, ChevronRight, Quote } from 'lucide-react';
+import { Mark, MarkerText } from '@/components/kokonutui/marker-text';
+import { testimonials } from '@/data/content';
 
-interface Testimony {
-  quote: React.ReactNode;
-  author: string;
-  role: string;
+function HighlightedQuote({ quote, highlight }: { quote: string; highlight: string }) {
+  const idx = quote.indexOf(highlight);
+  if (idx === -1) return <>{quote}</>;
+  const before = quote.slice(0, idx);
+  const after = quote.slice(idx + highlight.length);
+  return (
+    <>
+      {before}
+      <Mark
+        type="underline"
+        color="#ff5005"
+        strokeWidth={3}
+        className="font-semibold text-primary"
+      >
+        {highlight}
+      </Mark>
+      {after}
+    </>
+  );
 }
 
 export default function Testimonials() {
-  const testimonials: Testimony[] = [
-    {
-      quote: (
-        <>
-          Vishal is{" "}
-          <span style={{ color: 'var(--accent)', fontWeight: 700 }}>
-            excellent in capturing client and team needs
-          </span>{" "}
-          and translating those into the creation of quality products and outcomes.
-          Excellent teamwork and interactions. Always there to partner and deliver. Good
-          transferrable skills.
-        </>
-      ),
-      author: "Dr. Nathan Johnson",
-      role: "Associate Professor & Director, LEAPS Lab (ASU)",
-    },
-    {
-      quote: (
-        <>
-          Vishal was a great asset to our team in which he led the software development
-          of customizations for an enterprise model risk management application. He was
-          able to{" "}
-          <span style={{ color: 'var(--accent)', fontWeight: 700 }}>
-            quickly grasp often complex requirements
-          </span>{" "}
-          from the banking client and translate them into fully functional features. If
-          given the opportunity again, I wouldn't hesitate to have Vishal on my team.
-        </>
-      ),
-      author: "Arthur Ilyasov",
-      role: "Senior Consultant / Software Architect",
-    },
-    {
-      quote: (
-        <>
-          Vishal has been one of the best team members I have worked with. He has been
-          my{" "}
-          <span style={{ color: 'var(--accent)', fontWeight: 700 }}>
-            go-to colleague
-          </span>{" "}
-          for most of the critical bugs or enhancements. He is smart, and dedicated,
-          with effective communication skills, and is{" "}
-          <span style={{ color: 'var(--accent)', fontWeight: 700 }}>
-            very easy to work with
-          </span>
-          . All his high-quality work has made a huge impact on the team and the
-          project. Keep up the fantastic work!
-        </>
-      ),
-      author: "Madhuri Jhawar",
-      role: "Senior Software Engineer (Deloitte)",
-    },
-    {
-      quote: (
-        <>
-          Vishal is a highly talented individual who deals with the situation with all
-          the zeal. He is a team player and a{" "}
-          <span style={{ color: 'var(--accent)', fontWeight: 700 }}>
-            dependable colleague
-          </span>
-          . He is always ready to go that extra mile to get the work done. It was a
-          pleasure working with him.
-        </>
-      ),
-      author: "Anjali Shetty",
-      role: "Consultant / Project PMO (Deloitte)",
-    },
-    {
-      quote: (
-        <>
-          Vishal has strong analytical skills that he uses effectively in his research.
-          His exceptional research skills are complemented by his{" "}
-          <span style={{ color: 'var(--accent)', fontWeight: 700 }}>
-            fantastic communication skills
-          </span>
-          . He was very collaborative, solution-oriented, and well-liked by the team he
-          was leading. A great colleague to work with!
-        </>
-      ),
-      author: "Shruti Tanwar",
-      role: "Lead Researcher / Senior Developer",
-    },
-    {
-      quote: (
-        <>
-          Vishal has always had a way of getting the most out of the team and{" "}
-          <span style={{ color: 'var(--accent)', fontWeight: 700 }}>
-            maximizing everyone's potential
-          </span>
-          . He excels in whatever comes his way; developing new software modules from
-          scratch, exceptional presentations, figuring out new tech, debugging and
-          whatnot! I wouldn't hesitate a bit to have him as my team-mate again.
-        </>
-      ),
-      author: "Anitha Jadhav",
-      role: "Senior Systems Engineer (Deloitte)",
-    },
-  ];
+  const [index, setIndex] = useState(0);
+  const [direction, setDirection] = useState(1);
+  const [paused, setPaused] = useState(false);
+
+  const count = testimonials.length;
+
+  const goTo = (nextIdx: number, dir: number) => {
+    setDirection(dir);
+    setIndex((nextIdx + count) % count);
+  };
+
+  useEffect(() => {
+    if (paused) return;
+    const timer = window.setTimeout(() => {
+      setDirection(1);
+      setIndex((prev) => (prev + 1) % count);
+    }, 12000);
+    return () => window.clearTimeout(timer);
+  }, [paused, count, index]);
+
+  const current = testimonials[index];
 
   return (
-    <section id="testimonials" style={{ padding: '10rem 0 6rem 0', position: 'relative' }}>
-      <div className="container">
-        <div className="section-grid">
-          
-          {/* Sticky Left Column */}
-          <div className="sticky-header">
-            <div className="section-subtitle">Testimonies</div>
-            <h2 className="section-title" style={{ fontSize: '3rem', marginBottom: '1.5rem' }}>Colleagues Say</h2>
-            <p style={{ color: 'var(--text-secondary)', lineHeight: 1.6, fontSize: '0.95rem' }}>
-              Kind words and endorsements from engineering leads, professors, and teammates I've partnered with over the years.
+    <section id="testimonials" className="relative border-t border-border py-24 sm:py-32">
+      <div className="mx-auto max-w-6xl px-6">
+        {/* Header + Controls */}
+        <div className="mb-12 flex flex-col justify-between gap-6 sm:flex-row sm:items-end">
+          <div className="max-w-xl">
+            <div className="font-mono text-xs font-semibold tracking-[0.2em] text-primary uppercase">
+              06 / Endorsements
+            </div>
+            <h2 className="mt-2 text-3xl font-bold tracking-tight text-foreground sm:text-5xl">
+              Kind Words
+            </h2>
+            <p className="mt-3 text-sm leading-relaxed text-muted-foreground sm:text-base">
+              Notes from professors, architects, and teammates I’ve worked alongside.
             </p>
           </div>
 
-          {/* Flowing Right Column */}
-          <div
-            style={{
-              display: 'flex',
-              flexDirection: 'column',
-              gap: '2rem',
-            }}
-          >
-            {testimonials.map((testimony, idx) => (
-              <div
-                key={idx}
-                className="glass-card hoverable"
-                style={{
-                  display: 'flex',
-                  flexDirection: 'column',
-                  gap: '1.5rem',
-                  position: 'relative',
-                }}
+          <div className="flex items-center gap-3">
+            <span className="font-mono text-xs text-muted-foreground">
+              0{index + 1} / 0{count}
+            </span>
+            <button
+              type="button"
+              aria-label="Previous testimonial"
+              onClick={() => goTo(index - 1, -1)}
+              className="flex size-10 items-center justify-center rounded-xl border border-border bg-card text-foreground transition-colors hover:border-primary/60"
+            >
+              <ChevronLeft className="size-4" />
+            </button>
+            <button
+              type="button"
+              aria-label="Next testimonial"
+              onClick={() => goTo(index + 1, 1)}
+              className="flex size-10 items-center justify-center rounded-xl border border-border bg-card text-foreground transition-colors hover:border-primary/60"
+            >
+              <ChevronRight className="size-4" />
+            </button>
+          </div>
+        </div>
+
+        {/* Large Testimonial Slider */}
+        <div
+          onMouseEnter={() => setPaused(true)}
+          onMouseLeave={() => setPaused(false)}
+          className="relative overflow-hidden rounded-3xl border border-border bg-card p-8 sm:p-12 lg:p-16"
+        >
+          <Quote className="mb-6 size-8 text-primary/70 sm:size-10" />
+
+          <div className="min-h-[220px] sm:min-h-[200px]">
+            <AnimatePresence mode="wait" custom={direction}>
+              <motion.blockquote
+                key={current.author}
+                custom={direction}
+                initial={{ opacity: 0, x: direction * 28 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: direction * -28 }}
+                transition={{ duration: 0.32, ease: [0.22, 1, 0.36, 1] }}
+                className="flex flex-col justify-between gap-8"
               >
-                {/* Glowing quote icon (flat outline style) */}
-                <div
-                  style={{
-                    position: 'absolute',
-                    top: '1.5rem',
-                    right: '1.5rem',
-                    color: 'rgba(255, 80, 5, 0.25)',
-                  }}
+                <MarkerText
+                  show
+                  className="text-xl leading-relaxed font-normal text-foreground sm:text-2xl lg:text-3xl lg:leading-relaxed"
                 >
-                  <Quote size={24} />
-                </div>
+                  <HighlightedQuote quote={current.quote} highlight={current.highlight} />
+                </MarkerText>
 
-                <p
-                  style={{
-                    fontSize: '1.05rem',
-                    lineHeight: 1.65,
-                    fontStyle: 'italic',
-                    color: 'var(--text-primary)',
-                  }}
-                >
-                  "{testimony.quote}"
-                </p>
-
-                <div>
-                  <h4 style={{ fontSize: '1.05rem', fontWeight: 700, color: 'var(--text-primary)' }}>
-                    {testimony.author}
-                  </h4>
-                  <span style={{ fontSize: '0.78rem', color: 'var(--text-muted)', fontFamily: 'var(--font-mono)' }}>
-                    {testimony.role}
-                  </span>
-                </div>
-              </div>
-            ))}
+                <footer className="border-t border-border pt-6">
+                  <div className="text-base font-bold text-foreground sm:text-lg">
+                    {current.author}
+                  </div>
+                  <div className="mt-0.5 font-mono text-xs text-muted-foreground sm:text-sm">
+                    {current.role}
+                  </div>
+                </footer>
+              </motion.blockquote>
+            </AnimatePresence>
           </div>
 
+          {/* Dot Indicators */}
+          <div className="mt-8 flex items-center gap-2">
+            {testimonials.map((t, i) => {
+              const active = i === index;
+              return (
+                <button
+                  key={t.author}
+                  type="button"
+                  aria-label={`Show testimonial from ${t.author}`}
+                  onClick={() => goTo(i, i > index ? 1 : -1)}
+                  className={`h-1.5 rounded-full transition-all ${
+                    active
+                      ? 'w-8 bg-primary'
+                      : 'w-2 bg-muted-foreground/30 hover:bg-muted-foreground/60'
+                  }`}
+                />
+              );
+            })}
+          </div>
         </div>
       </div>
     </section>

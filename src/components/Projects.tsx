@@ -1,454 +1,242 @@
-import { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { ExternalLink, X, ShieldAlert } from 'lucide-react';
+import { useEffect, useState } from 'react';
+import { AnimatePresence, motion } from 'motion/react';
+import { ArrowUpRight, ExternalLink, ShieldAlert, X } from 'lucide-react';
+import { projects, type Project, type ProjectCategory } from '@/data/content';
 
-interface Project {
-  title: string;
-  subtitle: string;
-  desc: string;
-  image: string;
-  tags: string[];
-  category: ('web' | 'mobile' | 'design')[];
-  link?: string;
-  github?: string;
-  figma?: string;
-  restricted?: boolean;
-}
+type Filter = 'all' | ProjectCategory;
+
+const FILTERS: { id: Filter; label: string }[] = [
+  { id: 'all', label: 'All Work' },
+  { id: 'web', label: 'Web / API' },
+  { id: 'mobile', label: 'Mobile / AR' },
+  { id: 'design', label: 'UI & Design' },
+];
 
 export default function Projects() {
-  const [filter, setFilter] = useState<'all' | 'web' | 'mobile' | 'design'>('all');
-  const [selectedProject, setSelectedProject] = useState<Project | null>(null);
-  const [hoveredIdx, setHoveredIdx] = useState<number | null>(null);
-  const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
-  const [isMobile, setIsMobile] = useState(false);
+  const [filter, setFilter] = useState<Filter>('all');
+  const [selected, setSelected] = useState<Project | null>(null);
 
-  const projects: Project[] = [
-    {
-      title: 'Makershala',
-      subtitle: 'STEM Learning Portal',
-      desc: 'Designed and engineered a full-stack online learning system focused on STEM curricula for students aged 8-16. Implemented interactive lessons and progress dashboards using PHP, MySQL, and Bootstrap, scaling the platform to support modular user onboarding.',
-      image: '/images/work-001.png',
-      tags: ['HTML', 'Bootstrap', 'PHP', 'MySQL'],
-      category: ['web'],
-      link: 'https://makershala.com/',
-    },
-    {
-      title: 'Epic Ease',
-      subtitle: 'User Story Generation Simplified',
-      desc: 'Implemented a customized template-driven tool to auto-generate Agile user stories matching strict client guidelines. Streamlined mapping out user flows for the business team, cutting feedback iterations by ~30% and facilitating absolute transparency between business and engineering teams.',
-      image: '/images/work-002.png',
-      tags: ['Figma', 'Agile', 'Product Design'],
-      category: ['design'],
-      restricted: true,
-    },
-    {
-      title: 'Bugs Eye',
-      subtitle: 'Bug Tracking Application',
-      desc: 'A secure 3-tier issue tracking platform engineered with Java Spring Boot and deployed on AWS. Automated bug lifecycle stages and notifications, reducing pipeline communication overhead and code re-work by 80%.',
-      image: '/images/work-003.png',
-      tags: ['Java', 'Spring Boot', 'AWS', 'MySQL'],
-      category: ['web'],
-      restricted: true,
-    },
-    {
-      title: 'STRIDE',
-      subtitle: 'AR-Based Training Application',
-      desc: 'An Augmented Reality Android training application tailored to Department of Defense (DOD) professionals. Projects interactive 3D models and step-by-step animations in AR for microgrid setup and maintenance, designed for easy scalability into other practical training verticals.',
-      image: '/images/work-stride.png',
-      tags: ['Unity', 'Blender', 'Figma', 'ARCore', 'C#'],
-      category: ['mobile', 'design'],
-      figma: 'https://www.figma.com/proto/bC6L11M1CakPeSMTi0xRuQ/STRIDE-AR-Review?page-id=515%3A12670&node-id=515-13192&starting-point-node-id=515%3A13192&mode=design&t=pfoju3aDbx04Bwhv-1',
-    },
-    {
-      title: 'Fit Fusion',
-      subtitle: 'Context-Aware Android Application',
-      desc: 'A personalized mobile fitness ecosystem syncing real-time health metrics from an Android wearable device. Auto-regulates training sets and workouts dynamically; for example, instructing the user to rest if heart rate spikes, or scaling intensity when exercise parameters are easily cleared.',
-      image: '/images/work-fitfusion.png',
-      tags: ['Android', 'Java', 'Figma', 'WearOS API'],
-      category: ['mobile', 'design'],
-      github: 'https://github.com/Kanvi1/Fit-Fusion.git',
-      figma: 'https://www.figma.com/proto/VithZUuYLfWB2mREgUjj8r/MC-Project?page-id=0%3A1&type=design&node-id=1-3&viewport=945%2C524%2C0.22&t=MEBXXKkbX6vrU2mY-1&scaling=scale-down&starting-point-node-id=1%3A3&mode=design',
-    },
-    {
-      title: 'LEAPS',
-      subtitle: 'Energy Laboratory Website',
-      desc: 'Spearheaded the design overhaul of the LEAPS energy laboratory website, creating a sleek, user-friendly, responsive interface. Optimizations in information architecture and visual layouts directly resulted in a 20% increase in course enrollment signups.',
-      image: '/images/work-leaps.png',
-      tags: ['HTML/CSS/JS', 'WordPress', 'Figma'],
-      category: ['web', 'design'],
-      link: 'https://leaps.asu.edu/',
-    },
-    {
-      title: 'Energy Symposium',
-      subtitle: 'Event Promotion Website',
-      desc: 'Led the UI/UX design and engineering of an event promotion portal from concept, pitch, implementation, testing, to final production. Yielded a 50% reservation increase compared to historical promotional methods, delivering a fully operational, beautiful landing page in a few days.',
-      image: '/images/work-symposium.png',
-      tags: ['HTML/CSS/JS', 'Git', 'Figma', 'Responsive Design'],
-      category: ['web', 'design'],
-      link: 'https://vishalkanwar.com/LEAPS-SymposiumWebsite/',
-    },
-  ];
+  const filtered = projects.filter((p) =>
+    filter === 'all' ? true : p.category.includes(filter)
+  );
 
   useEffect(() => {
-    const checkMobile = () => {
-      setIsMobile(window.innerWidth < 850);
+    if (!selected) return;
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') setSelected(null);
     };
-    checkMobile();
-    window.addEventListener('resize', checkMobile);
-    return () => window.removeEventListener('resize', checkMobile);
-  }, []);
-
-  const handleMouseMove = (e: React.MouseEvent) => {
-    setMousePos({ x: e.clientX, y: e.clientY });
-  };
-
-  const filteredProjects = projects.filter((project) => {
-    if (filter === 'all') return true;
-    return project.category.includes(filter);
-  });
+    window.addEventListener('keydown', onKeyDown);
+    return () => window.removeEventListener('keydown', onKeyDown);
+  }, [selected]);
 
   return (
-    <section id="projects" style={{ padding: '10rem 0 6rem 0', position: 'relative' }}>
-      <div className="container">
-        <div className="section-grid">
-          
-          {/* Sticky Left Column */}
-          <div className="sticky-header">
-            <div className="section-subtitle">Portfolio</div>
-            <h2 className="section-title" style={{ fontSize: '3rem', marginBottom: '1.5rem' }}>Featured Work</h2>
-            
-            <p style={{ color: 'var(--text-secondary)', lineHeight: 1.6, fontSize: '0.95rem', marginBottom: '2rem' }}>
-              A selection of my professional engineering work and user interface design prototypes.
+    <section id="projects" className="relative border-t border-border py-24 sm:py-32">
+      <div className="mx-auto max-w-6xl px-6">
+        {/* Header + Filter Bar */}
+        <div className="flex flex-col justify-between gap-6 md:flex-row md:items-end">
+          <div>
+            <div className="font-mono text-xs font-semibold tracking-[0.2em] text-primary uppercase">
+              03 / Portfolio
+            </div>
+            <h2 className="mt-2 text-3xl font-bold tracking-tight text-foreground sm:text-5xl">
+              Featured Work
+            </h2>
+            <p className="mt-3 max-w-md text-sm leading-relaxed text-muted-foreground sm:text-base">
+              Selected full-stack systems, AR training apps, and product design prototypes.
             </p>
+          </div>
 
-            {/* Filter Controls: Vertical for desktop, horizontal for mobile */}
-            <div
-              style={{
-                display: 'flex',
-                flexDirection: isMobile ? 'row' : 'column',
-                alignItems: isMobile ? 'center' : 'flex-start',
-                justifyContent: isMobile ? 'flex-start' : 'stretch',
-                gap: isMobile ? '1.25rem' : '0.85rem',
-                marginTop: isMobile ? '1.5rem' : '2.5rem',
-                marginBottom: isMobile ? '2.5rem' : '0',
-                flexWrap: 'wrap',
-                borderBottom: isMobile ? '1px solid var(--border-color)' : 'none',
-                paddingBottom: isMobile ? '1rem' : '0',
-              }}
-            >
-              {(['all', 'web', 'mobile', 'design'] as const).map((cat) => (
+          <div
+            role="tablist"
+            aria-label="Filter projects"
+            className="inline-flex flex-wrap gap-1 rounded-xl border border-border bg-card p-1"
+          >
+            {FILTERS.map((f) => {
+              const active = filter === f.id;
+              return (
                 <button
-                  key={cat}
-                  onClick={() => setFilter(cat)}
-                  className="hoverable"
-                  style={{
-                    background: 'none',
-                    border: 'none',
-                    color: filter === cat ? 'var(--text-primary)' : 'var(--text-muted)',
-                    fontWeight: 600,
-                    fontSize: '0.85rem',
-                    fontFamily: 'var(--font-mono)',
-                    cursor: 'pointer',
-                    textTransform: 'uppercase',
-                    letterSpacing: '0.05em',
-                    transition: 'all var(--transition-fast)',
-                    position: 'relative',
-                    padding: isMobile ? '0 0 0.5rem 0' : '0.25rem 0',
-                  }}
+                  key={f.id}
+                  role="tab"
+                  aria-selected={active}
+                  type="button"
+                  onClick={() => setFilter(f.id)}
+                  className={`relative rounded-lg px-3.5 py-1.5 font-mono text-xs font-medium transition-colors ${
+                    active ? 'text-primary-foreground' : 'text-muted-foreground hover:text-foreground'
+                  }`}
                 >
-                  {cat === 'all' ? 'All Work' : cat === 'web' ? 'Web / API' : cat === 'mobile' ? 'Mobile / AR' : 'UI & Design'}
-                  {filter === cat && (
-                    <motion.div
-                      layoutId="projectsFilterUnderline"
-                      style={{
-                        position: 'absolute',
-                        bottom: isMobile ? '-1px' : '0',
-                        left: 0,
-                        right: isMobile ? 0 : 'auto',
-                        width: isMobile ? 'auto' : '1.5rem',
-                        height: '2px',
-                        backgroundColor: 'var(--accent)',
-                      }}
+                  {active && (
+                    <motion.span
+                      layoutId="projectFilterPill"
+                      transition={{ type: 'spring', stiffness: 420, damping: 32 }}
+                      className="absolute inset-0 rounded-lg bg-primary"
                     />
                   )}
+                  <span className="relative z-10">{f.label}</span>
                 </button>
-              ))}
-            </div>
+              );
+            })}
           </div>
-
-          {/* Flowing Right Column */}
-          <div style={{ paddingTop: isMobile ? '0' : '1.5rem' }}>
-            {/* Desktop View: Editorial Hover-Reveal List */}
-            {!isMobile ? (
-              <div 
-                style={{ display: 'flex', flexDirection: 'column' }} 
-                onMouseMove={handleMouseMove}
-              >
-                {filteredProjects.map((project, idx) => (
-                  <div
-                    key={project.title}
-                    className="hoverable"
-                    style={{
-                      display: 'grid',
-                      gridTemplateColumns: '60px 1fr auto',
-                      alignItems: 'center',
-                      padding: '2.5rem 0',
-                      borderBottom: '1px solid var(--border-color)',
-                      transition: 'padding var(--transition-fast)',
-                      cursor: 'pointer',
-                    }}
-                    onMouseEnter={() => setHoveredIdx(idx)}
-                    onMouseLeave={() => setHoveredIdx(null)}
-                    onClick={() => setSelectedProject(project)}
-                  >
-                    {/* Index */}
-                    <div style={{ fontFamily: 'var(--font-mono)', fontSize: '0.75rem', color: 'var(--text-muted)' }}>
-                      0{idx + 1}.
-                    </div>
-                    {/* Title */}
-                    <div>
-                      <h3 style={{ fontSize: '1.75rem', fontWeight: 700, letterSpacing: '-0.02em', display: 'inline-block', marginRight: '1.5rem', color: 'var(--text-primary)' }}>
-                        {project.title}
-                      </h3>
-                      <span style={{ fontSize: '0.8rem', color: 'var(--text-muted)', fontFamily: 'var(--font-mono)' }}>
-                        {project.subtitle}
-                      </span>
-                    </div>
-                    {/* Tags */}
-                    <div style={{ display: 'flex', gap: '0.5rem' }}>
-                      {project.tags.slice(0, 2).map((t) => (
-                        <span key={t} className="tag" style={{ fontSize: '0.65rem' }}>{t}</span>
-                      ))}
-                    </div>
-                  </div>
-                ))}
-
-                {/* Floating Image Follower */}
-                <AnimatePresence>
-                  {hoveredIdx !== null && (
-                    <motion.div
-                      initial={{ opacity: 0, scale: 0.9 }}
-                      animate={{ opacity: 1, scale: 1 }}
-                      exit={{ opacity: 0, scale: 0.9 }}
-                      transition={{ type: 'spring', stiffness: 400, damping: 28 }}
-                      style={{
-                        position: 'fixed',
-                        left: mousePos.x + 30,
-                        top: mousePos.y - 120,
-                        width: '320px',
-                        height: '200px',
-                        pointerEvents: 'none',
-                        zIndex: 500,
-                        borderRadius: '0px',
-                        overflow: 'hidden',
-                        boxShadow: '0 25px 50px rgba(0, 0, 0, 0.5)',
-                        border: '1px solid var(--border-color)',
-                      }}
-                    >
-                      <img
-                        src={filteredProjects[hoveredIdx].image}
-                        alt={filteredProjects[hoveredIdx].title}
-                        style={{ width: '100%', height: '100%', objectFit: 'cover' }}
-                      />
-                    </motion.div>
-                  )}
-                </AnimatePresence>
-              </div>
-            ) : (
-              /* Mobile View: High-End Minimalist Cards */
-              <div
-                style={{
-                  display: 'grid',
-                  gridTemplateColumns: '1fr',
-                  gap: '2rem',
-                }}
-              >
-                {filteredProjects.map((project) => (
-                  <div
-                    key={project.title}
-                    className="glass-card hoverable"
-                    style={{
-                      display: 'flex',
-                      flexDirection: 'column',
-                      padding: 0,
-                      overflow: 'hidden',
-                      cursor: 'pointer',
-                    }}
-                    onClick={() => setSelectedProject(project)}
-                  >
-                    {/* Image */}
-                    <div style={{ width: '100%', height: '220px', overflow: 'hidden' }}>
-                      <img
-                        src={project.image}
-                        alt={project.title}
-                        style={{ width: '100%', height: '100%', objectFit: 'cover' }}
-                      />
-                    </div>
-                    {/* Content */}
-                    <div style={{ padding: '1.75rem' }}>
-                      <h3 style={{ fontSize: '1.35rem', fontWeight: 700, marginBottom: '0.25rem' }}>
-                        {project.title}
-                      </h3>
-                      <span style={{ fontSize: '0.8rem', color: 'var(--accent)', fontFamily: 'var(--font-mono)', fontWeight: 600, display: 'block', marginBottom: '1rem' }}>
-                        {project.subtitle}
-                      </span>
-                      <p style={{ fontSize: '0.88rem', color: 'var(--text-secondary)', lineHeight: 1.5 }}>
-                        {project.desc}
-                      </p>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            )}
-          </div>
-
         </div>
+
+        {/* Project Grid */}
+        <motion.div layout className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          <AnimatePresence mode="popLayout">
+            {filtered.map((project, idx) => (
+              <motion.article
+                layout
+                key={project.id}
+                initial={{ opacity: 0, y: 16 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, scale: 0.96 }}
+                transition={{ duration: 0.3, delay: idx * 0.03 }}
+                onClick={() => setSelected(project)}
+                className="group flex cursor-pointer flex-col overflow-hidden rounded-2xl border border-border bg-card transition-colors hover:border-primary/50"
+              >
+                {/* Thumbnail */}
+                <div className="relative aspect-[16/10] w-full overflow-hidden bg-secondary">
+                  <img
+                    src={project.image}
+                    alt={project.title}
+                    loading="lazy"
+                    className="size-full object-cover transition-transform duration-500 group-hover:scale-105"
+                  />
+                  {project.impact && (
+                    <span className="absolute top-3 left-3 rounded-md bg-background/85 px-2.5 py-1 font-mono text-[11px] font-semibold text-primary backdrop-blur-md">
+                      {project.impact}
+                    </span>
+                  )}
+                  <span className="absolute top-3 right-3 flex size-8 items-center justify-center rounded-full bg-background/80 text-foreground opacity-0 backdrop-blur-md transition-opacity group-hover:opacity-100">
+                    <ArrowUpRight className="size-4" />
+                  </span>
+                </div>
+
+                {/* Body */}
+                <div className="flex flex-1 flex-col justify-between p-5">
+                  <div>
+                    <h3 className="text-lg font-bold tracking-tight text-foreground">
+                      {project.title}
+                    </h3>
+                    <p className="mt-0.5 font-mono text-xs text-primary">{project.subtitle}</p>
+                    <p className="mt-3 line-clamp-3 text-sm leading-relaxed text-muted-foreground">
+                      {project.desc}
+                    </p>
+                  </div>
+
+                  <div className="mt-4 flex flex-wrap gap-1.5 pt-3 border-t border-border">
+                    {project.tags.slice(0, 3).map((tag) => (
+                      <span
+                        key={tag}
+                        className="rounded-md bg-secondary px-2 py-0.5 font-mono text-[11px] text-muted-foreground"
+                      >
+                        {tag}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              </motion.article>
+            ))}
+          </AnimatePresence>
+        </motion.div>
       </div>
 
-      {/* Project Details Modal */}
+      {/* Modal */}
       <AnimatePresence>
-        {selectedProject && (
+        {selected && (
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            style={{
-              position: 'fixed',
-              inset: 0,
-              backgroundColor: 'rgba(5, 7, 10, 0.85)',
-              backdropFilter: 'blur(8px)',
-              zIndex: 9999,
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              padding: '2rem 1rem',
-            }}
-            onClick={() => setSelectedProject(null)}
+            onClick={() => setSelected(null)}
+            className="fixed inset-0 z-50 flex items-center justify-center bg-black/75 p-4 backdrop-blur-sm"
           >
             <motion.div
-              initial={{ scale: 0.95, y: 20, opacity: 0 }}
+              initial={{ scale: 0.96, y: 16, opacity: 0 }}
               animate={{ scale: 1, y: 0, opacity: 1 }}
-              exit={{ scale: 0.95, y: 20, opacity: 0 }}
-              transition={{ duration: 0.3 }}
-              style={{
-                width: '100%',
-                maxWidth: '650px',
-                backgroundColor: 'var(--bg-secondary)',
-                border: '1px solid var(--glass-border)',
-                borderRadius: '0.5rem',
-                overflow: 'hidden',
-                boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.5)',
-              }}
+              exit={{ scale: 0.96, y: 16, opacity: 0 }}
+              transition={{ duration: 0.25 }}
               onClick={(e) => e.stopPropagation()}
+              className="w-full max-w-2xl overflow-hidden rounded-2xl border border-border bg-card shadow-2xl"
             >
-              {/* Image Header */}
-              <div style={{ position: 'relative', width: '100%', height: '280px' }}>
+              <div className="relative aspect-[16/9] w-full bg-secondary">
                 <img
-                  src={selectedProject.image}
-                  alt={selectedProject.title}
-                  style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                  src={selected.image}
+                  alt={selected.title}
+                  className="size-full object-cover"
                 />
-                {/* Close Button */}
                 <button
-                  onClick={() => setSelectedProject(null)}
-                  className="hoverable"
-                  style={{
-                    position: 'absolute',
-                    top: '1rem',
-                    right: '1rem',
-                    width: '2.5rem',
-                    height: '2.5rem',
-                    borderRadius: '50%',
-                    backgroundColor: 'rgba(10, 14, 23, 0.6)',
-                    border: '1px solid rgba(255, 255, 255, 0.1)',
-                    color: '#ffffff',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    cursor: 'pointer',
-                  }}
-                  aria-label="Close modal"
+                  type="button"
+                  onClick={() => setSelected(null)}
+                  aria-label="Close project details"
+                  className="absolute top-3 right-3 flex size-9 items-center justify-center rounded-full bg-black/60 text-white backdrop-blur-md transition-colors hover:bg-black/80"
                 >
-                  <X size={18} />
+                  <X className="size-4" />
                 </button>
               </div>
 
-              {/* Modal Text Contents */}
-              <div style={{ padding: '2.5rem' }}>
-                <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.5rem' }}>
-                  <h3 style={{ fontSize: '1.75rem', fontWeight: 700 }}>{selectedProject.title}</h3>
-                  <span style={{ fontSize: '0.95rem', color: 'var(--accent)', fontWeight: 700 }}>
-                    {selectedProject.subtitle}
-                  </span>
+              <div className="p-6 sm:p-8">
+                <div className="flex flex-wrap items-baseline justify-between gap-2">
+                  <h3 className="text-2xl font-bold text-foreground">{selected.title}</h3>
+                  {selected.impact && (
+                    <span className="rounded-md bg-primary/10 px-2.5 py-1 font-mono text-xs font-semibold text-primary">
+                      {selected.impact}
+                    </span>
+                  )}
                 </div>
-
-                <p style={{ color: 'var(--text-secondary)', lineHeight: 1.6, marginBottom: '1.5rem', fontSize: '0.95rem' }}>
-                  {selectedProject.desc}
+                <p className="mt-1 font-mono text-xs text-muted-foreground">{selected.subtitle}</p>
+                <p className="mt-4 text-sm leading-relaxed text-muted-foreground sm:text-base">
+                  {selected.desc}
                 </p>
 
-                {/* Tags List */}
-                <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem', marginBottom: '2rem' }}>
-                  {selectedProject.tags.map((tag) => (
-                    <span key={tag} className="tag" style={{ fontSize: '0.75rem' }}>
+                <div className="mt-5 flex flex-wrap gap-1.5">
+                  {selected.tags.map((tag) => (
+                    <span
+                      key={tag}
+                      className="rounded-md bg-secondary px-2.5 py-1 font-mono text-xs text-foreground"
+                    >
                       {tag}
                     </span>
                   ))}
                 </div>
 
-                {/* Info Notice for Restricted Projects */}
-                {selectedProject.restricted && (
-                  <div
-                    style={{
-                      display: 'flex',
-                      gap: '1rem',
-                      alignItems: 'flex-start',
-                      padding: '1rem',
-                      backgroundColor: 'rgba(245, 158, 11, 0.08)',
-                      border: '1px solid rgba(245, 158, 11, 0.2)',
-                      borderRadius: '0.5rem',
-                      marginBottom: '2rem',
-                    }}
-                  >
-                    <ShieldAlert size={20} style={{ color: 'var(--warning)', flexShrink: 0, marginTop: '2px' }} />
-                    <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', margin: 0, lineHeight: 1.5 }}>
-                      Due to proprietary/copyright constraints, the source code for this Deloitte-related client module cannot be shared publicly. I'd be happy to discuss details or architectural design decisions in a call.
-                    </p>
+                {selected.restricted && (
+                  <div className="mt-5 flex items-start gap-3 rounded-xl border border-amber-500/30 bg-amber-500/10 p-3.5 text-xs leading-relaxed text-muted-foreground">
+                    <ShieldAlert className="mt-0.5 size-4 shrink-0 text-amber-500" />
+                    <span>
+                      Due to proprietary client constraints, the source code for this module is
+                      private. Happy to walk through the architecture on a call.
+                    </span>
                   </div>
                 )}
 
-                {/* Action Links */}
-                <div style={{ display: 'flex', flexWrap: 'wrap', gap: '1rem' }}>
-                  {selectedProject.link && (
+                <div className="mt-6 flex flex-wrap gap-3">
+                  {selected.link && (
                     <a
-                      href={selectedProject.link}
+                      href={selected.link}
                       target="_blank"
                       rel="noreferrer"
-                      className="btn btn-primary hoverable"
+                      className="inline-flex items-center gap-2 rounded-xl bg-primary px-4 py-2.5 text-xs font-semibold text-primary-foreground transition-opacity hover:opacity-90"
                     >
-                      View Live <ExternalLink size={16} />
+                      View Live <ExternalLink className="size-3.5" />
                     </a>
                   )}
-                  {selectedProject.github && (
+                  {selected.github && (
                     <a
-                      href={selectedProject.github}
+                      href={selected.github}
                       target="_blank"
                       rel="noreferrer"
-                      className="btn btn-secondary hoverable"
+                      className="inline-flex items-center gap-2 rounded-xl border border-border bg-secondary px-4 py-2.5 text-xs font-semibold text-foreground transition-colors hover:border-primary/50"
                     >
-                      <svg fill="currentColor" viewBox="0 0 24 24" width="16" height="16" style={{ marginRight: '8px' }}>
-                        <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
-                      </svg>
-                      View on GitHub
+                      View on GitHub <ExternalLink className="size-3.5" />
                     </a>
                   )}
-                  {selectedProject.figma && (
+                  {selected.figma && (
                     <a
-                      href={selectedProject.figma}
+                      href={selected.figma}
                       target="_blank"
                       rel="noreferrer"
-                      className="btn btn-secondary hoverable"
+                      className="inline-flex items-center gap-2 rounded-xl border border-border bg-secondary px-4 py-2.5 text-xs font-semibold text-foreground transition-colors hover:border-primary/50"
                     >
-                      View Prototype <ExternalLink size={16} />
+                      View Prototype <ExternalLink className="size-3.5" />
                     </a>
                   )}
                 </div>

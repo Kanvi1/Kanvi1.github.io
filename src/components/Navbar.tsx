@@ -1,265 +1,113 @@
-import { useState, useEffect } from 'react';
-import { Menu, X, Sun, Moon } from 'lucide-react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { useEffect, useState } from 'react';
+import { MorphicNavbar } from '@/components/kokonutui/morphic-navbar';
+import SwitchButton from '@/components/kokonutui/switch-button';
 
 interface NavbarProps {
   theme: 'dark' | 'light';
-  toggleTheme: () => void;
+  onThemeChange: (theme: 'dark' | 'light') => void;
 }
 
-export default function Navbar({ theme, toggleTheme }: NavbarProps) {
-  const [isOpen, setIsOpen] = useState(false);
-  const [scrolled, setScrolled] = useState(false);
-  const [activeSection, setActiveSection] = useState('home');
+const NAV_ITEMS = {
+  '#home': { name: 'Home' },
+  '#about': { name: 'About' },
+  '#experience': { name: 'Experience' },
+  '#projects': { name: 'Projects' },
+  '#skills': { name: 'Skills' },
+  '#achievements': { name: 'Milestones' },
+  '#contact': { name: 'Contact' },
+};
 
-  const navItems = [
-    { label: 'Home', href: '#home' },
-    { label: 'About', href: '#about' },
-    { label: 'Skills', href: '#skills' },
-    { label: 'Experience', href: '#experience' },
-    { label: 'Projects', href: '#projects' },
-    { label: 'Achievements', href: '#achievements' },
-    { label: 'Testimonials', href: '#testimonials' },
-    { label: 'Contact', href: '#contact' },
-  ];
+const SECTION_IDS = Object.keys(NAV_ITEMS).map((h) => h.slice(1));
+
+export default function Navbar({ theme, onThemeChange }: NavbarProps) {
+  const [activeHref, setActiveHref] = useState('#home');
 
   useEffect(() => {
-    const handleScroll = () => {
-      setScrolled(window.scrollY > 20);
+    const elements = SECTION_IDS.map((id) => document.getElementById(id)).filter(
+      (el): el is HTMLElement => el !== null
+    );
+    if (elements.length === 0) return;
 
-      // Section spy logic
-      const scrollPosition = window.scrollY + 150;
-      for (const item of navItems) {
-        const id = item.href.substring(1);
-        const element = document.getElementById(id);
-        if (element) {
-          const offsetTop = element.offsetTop;
-          const offsetHeight = element.offsetHeight;
-          if (scrollPosition >= offsetTop && scrollPosition < offsetTop + offsetHeight) {
-            setActiveSection(id);
-          }
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const visible = entries
+          .filter((entry) => entry.isIntersecting)
+          .sort((a, b) => b.intersectionRatio - a.intersectionRatio);
+
+        if (visible[0]?.target.id) {
+          setActiveHref(`#${visible[0].target.id}`);
         }
+      },
+      {
+        rootMargin: '-25% 0px -55% 0px',
+        threshold: [0.1, 0.25, 0.5],
       }
-    };
+    );
 
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
+    elements.forEach((el) => observer.observe(el));
+    return () => observer.disconnect();
   }, []);
 
   return (
-    <>
-      <nav
-        style={{
-          position: 'fixed',
-          top: '0',
-          left: '0',
-          right: '0',
-          zIndex: 1000,
-          transition: 'all 0.3s ease',
-          borderBottom: scrolled ? '1px solid var(--border-color)' : '1px solid transparent',
-          backgroundColor: scrolled ? 'var(--glass-bg)' : 'transparent',
-          backdropFilter: scrolled ? 'blur(16px)' : 'none',
-        }}
-      >
-        <div
-          className="container"
-          style={{
-            maxWidth: '1200px',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'space-between',
-            height: '4.5rem',
-            transition: 'all 0.3s ease',
+    <header className="pointer-events-none fixed inset-x-0 top-0 z-50 px-4 py-3 sm:px-6 sm:py-4">
+      <div className="mx-auto flex max-w-6xl items-center justify-between gap-3">
+        {/* Monogram */}
+        <a
+          href="#home"
+          onClick={(e) => {
+            e.preventDefault();
+            document.getElementById('home')?.scrollIntoView({ behavior: 'smooth' });
           }}
+          className="pointer-events-auto inline-flex items-center gap-2 rounded-xl border border-border bg-card/80 px-3 py-1.5 font-mono text-xs font-bold tracking-wider text-foreground backdrop-blur-md transition-colors hover:border-primary/50"
         >
-          {/* Logo */}
-          <a
-            href="#home"
-            className="hoverable"
-            style={{
-              fontSize: '1.25rem',
-              fontWeight: 700,
-              fontFamily: 'var(--font-sans)',
-              color: 'var(--text-primary)',
-              display: 'flex',
-              alignItems: 'center',
-              letterSpacing: '-0.03em',
-            }}
-          >
-            VK<span style={{ color: 'var(--accent)' }}>.</span>
-          </a>
+          <span className="inline-block size-2 rounded-full bg-primary" />
+          VK
+        </a>
 
-          {/* Desktop Nav Items */}
-          <div
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              gap: '1.5rem',
-            }}
-          >
-            <ul
-              style={{
-                display: 'flex',
-                listStyle: 'none',
-                gap: '1.5rem',
-                margin: 0,
-                padding: 0,
-              }}
-              className="desktop-menu"
-            >
-              {navItems.map((item) => {
-                const isActive = activeSection === item.href.substring(1);
-                return (
-                  <li key={item.label}>
-                    <a
-                      href={item.href}
-                      className="hoverable"
-                      style={{
-                        fontSize: '0.92rem',
-                        fontFamily: 'var(--font-sans)',
-                        fontWeight: 600,
-                        color: isActive ? 'var(--text-primary)' : 'var(--text-secondary)',
-                        position: 'relative',
-                        padding: '0.25rem 0',
-                        textDecoration: 'none',
-                        transition: 'color var(--transition-fast)',
-                      }}
-                    >
-                      {item.label}
-                      {isActive && (
-                        <motion.span
-                          layoutId="activeIndicator"
-                          style={{
-                            position: 'absolute',
-                            bottom: 0,
-                            left: 0,
-                            right: 0,
-                            height: '2px',
-                            backgroundColor: 'var(--accent)',
-                          }}
-                        />
-                      )}
-                    </a>
-                  </li>
-                );
-              })}
-            </ul>
-
-            {/* Theme Toggle Button */}
-            <button
-              onClick={toggleTheme}
-              className="hoverable"
-              style={{
-                background: 'transparent',
-                border: '1px solid var(--border-color)',
-                color: 'var(--text-primary)',
-                cursor: 'pointer',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                width: '2.25rem',
-                height: '2.25rem',
-                backgroundColor: 'var(--bg-secondary)',
-                transition: 'all var(--transition-fast)',
-              }}
-              aria-label="Toggle Theme"
-            >
-              {theme === 'dark' ? <Sun size={18} /> : <Moon size={18} />}
-            </button>
-
-            {/* Mobile Menu Toggle */}
-            <button
-              onClick={() => setIsOpen(!isOpen)}
-              className="hoverable mobile-menu-toggle"
-              style={{
-                background: 'transparent',
-                border: 'none',
-                color: 'var(--text-primary)',
-                cursor: 'pointer',
-                display: 'none', // Managed in CSS via media queries
-                alignItems: 'center',
-                justifyContent: 'center',
-                width: '2.5rem',
-                height: '2.5rem',
-              }}
-            >
-              {isOpen ? <X size={24} /> : <Menu size={24} />}
-            </button>
-          </div>
+        {/* Kokonut UI Morphic Navbar */}
+        <div className="pointer-events-auto hidden md:block">
+          <MorphicNavbar items={NAV_ITEMS} activeHref={activeHref} compact />
         </div>
-      </nav>
 
-      {/* Mobile Menu Drawer */}
-      <AnimatePresence>
-        {isOpen && (
-          <motion.div
-            initial={{ opacity: 0, y: -20 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -20 }}
-            transition={{ duration: 0.2 }}
-            style={{
-              position: 'fixed',
-              top: '5.5rem',
-              left: '1rem',
-              right: '1rem',
-              backgroundColor: 'var(--bg-secondary)',
-              border: '1px solid var(--border-color)',
-              borderRadius: '0px',
-              boxShadow: '0 20px 40px rgba(0, 0, 0, 0.4)',
-              zIndex: 999,
-              padding: '1.5rem',
-            }}
-            className="mobile-menu-drawer"
-          >
-            <ul
-              style={{
-                display: 'flex',
-                flexDirection: 'column',
-                listStyle: 'none',
-                gap: '1rem',
-                margin: 0,
-                padding: 0,
+        {/* Theme Switcher */}
+        <div className="pointer-events-auto flex items-center gap-2">
+          <SwitchButton
+            size="sm"
+            showLabel={false}
+            theme={theme}
+            onThemeChange={onThemeChange}
+            className="rounded-xl border border-border bg-card/80 backdrop-blur-md"
+          />
+        </div>
+      </div>
+
+      {/* Compact Mobile Nav */}
+      <nav
+        aria-label="Mobile navigation"
+        className="pointer-events-auto mx-auto mt-2 flex max-w-full items-center gap-1 overflow-x-auto rounded-xl border border-border bg-card/85 p-1 backdrop-blur-md md:hidden"
+      >
+        {Object.entries(NAV_ITEMS).map(([href, { name }]) => {
+          const active = activeHref === href;
+          return (
+            <a
+              key={href}
+              href={href}
+              onClick={(e) => {
+                e.preventDefault();
+                setActiveHref(href);
+                document.getElementById(href.slice(1))?.scrollIntoView({ behavior: 'smooth' });
               }}
+              className={`shrink-0 rounded-lg px-2.5 py-1 text-xs font-medium transition-colors ${
+                active
+                  ? 'bg-primary text-primary-foreground'
+                  : 'text-muted-foreground hover:text-foreground'
+              }`}
             >
-              {navItems.map((item) => (
-                <li key={item.label}>
-                  <a
-                    href={item.href}
-                    onClick={() => setIsOpen(false)}
-                    style={{
-                      display: 'block',
-                      padding: '0.75rem 1rem',
-                      fontWeight: 600,
-                      color: activeSection === item.href.substring(1) ? 'var(--accent)' : 'var(--text-primary)',
-                      backgroundColor: activeSection === item.href.substring(1) ? 'var(--accent-glow)' : 'transparent',
-                      borderLeft: activeSection === item.href.substring(1) ? '2px solid var(--accent)' : 'none',
-                    }}
-                  >
-                    {item.label}
-                  </a>
-                </li>
-              ))}
-            </ul>
-          </motion.div>
-        )}
-      </AnimatePresence>
-
-      <style>{`
-        .desktop-menu a {
-          text-decoration: none !important;
-        }
-        .desktop-menu a:hover {
-          text-decoration: none !important;
-        }
-        @media (max-width: 900px) {
-          .desktop-menu {
-            display: none !important;
-          }
-          .mobile-menu-toggle {
-            display: flex !important;
-          }
-        }
-      `}</style>
-    </>
+              {name}
+            </a>
+          );
+        })}
+      </nav>
+    </header>
   );
 }

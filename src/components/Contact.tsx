@@ -1,29 +1,29 @@
-import React, { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { Mail, Send, Loader2, Sparkles, CheckCircle2 } from 'lucide-react';
+import { useState, type FormEvent } from 'react';
+import { motion } from 'motion/react';
+import { ExternalLink, Mail, Send } from 'lucide-react';
+import ParticleButton, { type ParticleButtonStatus } from '@/components/kokonutui/particle-button';
+import { profile } from '@/data/content';
 
 export default function Contact() {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [message, setMessage] = useState('');
-  const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
+  const [status, setStatus] = useState<ParticleButtonStatus>('idle');
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
-    if (!name || !email || !message) return;
+    if (!name.trim() || !email.trim() || !message.trim() || status === 'pending') return;
 
-    setStatus('loading');
+    setStatus('pending');
 
     try {
-      const response = await fetch('https://formspree.io/f/mjvnowae', {
+      const response = await fetch(profile.formspree, {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           Name: name,
-          email: email,
-          message: message,
+          email,
+          message,
         }),
       });
 
@@ -32,277 +32,169 @@ export default function Contact() {
         setName('');
         setEmail('');
         setMessage('');
+        window.setTimeout(() => setStatus('idle'), 3000);
       } else {
         setStatus('error');
+        window.setTimeout(() => setStatus('idle'), 3200);
       }
-    } catch (err) {
+    } catch {
       setStatus('error');
+      window.setTimeout(() => setStatus('idle'), 3200);
     }
   };
 
   return (
-    <section id="contact" style={{ padding: '10rem 0 6rem 0', position: 'relative' }}>
-      <div className="container">
-        <div className="section-grid">
-          
-          {/* Sticky Left Column */}
-          <div className="sticky-header">
-            <div className="section-subtitle">Connect</div>
-            <h2 className="section-title" style={{ fontSize: '3rem', marginBottom: '1.5rem' }}>Let's Talk</h2>
-            
-            <p style={{ color: 'var(--text-secondary)', lineHeight: 1.6, fontSize: '0.95rem', marginBottom: '2.5rem' }}>
-              I am actively seeking full-stack software development opportunities and am always open to discussing new technical projects, architectures, and system designs. Let's connect!
+    <section id="contact" className="relative border-t border-border py-24 sm:py-32">
+      <div className="mx-auto max-w-6xl px-6">
+        <div className="grid gap-12 lg:grid-cols-[0.85fr_1.15fr]">
+          {/* Left Info */}
+          <div>
+            <div className="font-mono text-xs font-semibold tracking-[0.2em] text-primary uppercase">
+              07 / Connect
+            </div>
+            <h2 className="mt-2 text-3xl font-bold tracking-tight text-foreground sm:text-5xl">
+              Let’s Talk
+            </h2>
+            <p className="mt-4 max-w-md text-base leading-relaxed text-muted-foreground">
+              Whether it’s system architecture, full-stack engineering, or design collaboration, I’m
+              always happy to chat.
             </p>
 
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', marginBottom: '2rem' }}>
-              <div
-                style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '1rem',
-                  padding: '1rem',
-                  backgroundColor: 'var(--bg-secondary)',
-                  border: '1px solid var(--border-color)',
-                }}
+            <div className="mt-8 space-y-4">
+              <a
+                href={`mailto:${profile.email}`}
+                className="flex items-center gap-3 rounded-xl border border-border bg-card p-4 transition-colors hover:border-primary/50"
               >
-                <div
-                  style={{
-                    width: '2rem',
-                    height: '2rem',
-                    backgroundColor: 'var(--accent-glow)',
-                    color: 'var(--accent)',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                  }}
-                >
-                  <Mail size={15} />
+                <div className="flex size-10 items-center justify-center rounded-lg bg-primary/10 text-primary">
+                  <Mail className="size-4" />
                 </div>
                 <div>
-                  <div style={{ fontSize: '0.65rem', color: 'var(--text-muted)', fontFamily: 'var(--font-mono)', fontWeight: 600 }}>EMAIL</div>
-                  <a
-                    href="mailto:vishalkanwar10@gmail.com"
-                    className="hoverable"
-                    style={{ fontSize: '0.92rem', fontWeight: 600, color: 'var(--text-primary)' }}
-                  >
-                    vishalkanwar10@gmail.com
-                  </a>
+                  <div className="font-mono text-[11px] text-muted-foreground uppercase">
+                    Direct Email
+                  </div>
+                  <div className="text-sm font-semibold text-foreground">{profile.email}</div>
                 </div>
+              </a>
+
+              <div className="flex flex-wrap gap-2.5 pt-2">
+                {[
+                  { label: 'LinkedIn', href: profile.socials.linkedin },
+                  { label: 'GitHub', href: profile.socials.github },
+                  { label: 'LeetCode', href: profile.socials.leetcode },
+                ].map((link) => (
+                  <a
+                    key={link.label}
+                    href={link.href}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="inline-flex items-center gap-1.5 rounded-lg border border-border bg-card px-3.5 py-2 font-mono text-xs font-medium text-muted-foreground transition-colors hover:border-primary/50 hover:text-foreground"
+                  >
+                    {link.label}
+                    <ExternalLink className="size-3" />
+                  </a>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          {/* Right Form */}
+          <motion.form
+            initial={{ opacity: 0, y: 18 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: '-80px' }}
+            transition={{ duration: 0.45 }}
+            onSubmit={handleSubmit}
+            className="space-y-5 rounded-2xl border border-border bg-card p-6 sm:p-8"
+          >
+            <div className="grid gap-5 sm:grid-cols-2">
+              <div>
+                <label
+                  htmlFor="contact-name"
+                  className="mb-1.5 block font-mono text-xs font-medium text-muted-foreground uppercase"
+                >
+                  Name
+                </label>
+                <input
+                  id="contact-name"
+                  type="text"
+                  required
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  placeholder="John Doe"
+                  className="w-full rounded-xl border border-input bg-background px-4 py-2.5 text-sm text-foreground placeholder:text-muted-foreground/60 focus:border-primary focus:outline-none"
+                />
+              </div>
+              <div>
+                <label
+                  htmlFor="contact-email"
+                  className="mb-1.5 block font-mono text-xs font-medium text-muted-foreground uppercase"
+                >
+                  Email
+                </label>
+                <input
+                  id="contact-email"
+                  type="email"
+                  required
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  placeholder="john@example.com"
+                  className="w-full rounded-xl border border-input bg-background px-4 py-2.5 text-sm text-foreground placeholder:text-muted-foreground/60 focus:border-primary focus:outline-none"
+                />
               </div>
             </div>
 
-            {/* Social Icons */}
-            <div style={{ display: 'flex', gap: '1rem' }}>
-              <a
-                href="http://www.linkedin.com/in/vishal-kanwar/"
-                target="_blank"
-                rel="noreferrer"
-                className="hoverable social-icon-btn"
-                aria-label="LinkedIn"
+            <div>
+              <label
+                htmlFor="contact-message"
+                className="mb-1.5 block font-mono text-xs font-medium text-muted-foreground uppercase"
               >
-                <svg fill="currentColor" viewBox="0 0 24 24" width="18" height="18">
-                  <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/>
-                </svg>
-              </a>
-              <a
-                href="https://github.com/Kanvi1"
-                target="_blank"
-                rel="noreferrer"
-                className="hoverable social-icon-btn"
-                aria-label="GitHub"
-              >
-                <svg fill="currentColor" viewBox="0 0 24 24" width="18" height="18">
-                  <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
-                </svg>
-              </a>
+                Message
+              </label>
+              <textarea
+                id="contact-message"
+                required
+                rows={5}
+                value={message}
+                onChange={(e) => setMessage(e.target.value)}
+                placeholder="Tell me about what you’re building..."
+                className="w-full resize-none rounded-xl border border-input bg-background px-4 py-3 text-sm text-foreground placeholder:text-muted-foreground/60 focus:border-primary focus:outline-none"
+              />
             </div>
-          </div>
 
-          {/* Flowing Right Column (Form Container) */}
-          <div className="glass-card" style={{ padding: '2.5rem', minHeight: '380px', position: 'relative' }}>
-            <AnimatePresence mode="wait">
-              {status === 'success' ? (
-                <motion.div
-                  initial={{ opacity: 0, scale: 0.95 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  exit={{ opacity: 0, scale: 0.95 }}
-                  style={{
-                    display: 'flex',
-                    flexDirection: 'column',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    height: '100%',
-                    minHeight: '330px',
-                    textAlign: 'center',
-                    gap: '1rem',
-                  }}
-                >
-                  <CheckCircle2 size={56} style={{ color: 'var(--success)' }} />
-                  <h3 style={{ fontSize: '1.5rem', fontWeight: 800 }}>Thank You!</h3>
-                  <p style={{ color: 'var(--text-secondary)', maxWidth: '300px', lineHeight: 1.5 }}>
-                    Your message has been delivered successfully. I will get back to you as soon as possible.
-                  </p>
-                </motion.div>
-              ) : (
-                <motion.form
-                  key="contact-form"
-                  onSubmit={handleSubmit}
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  exit={{ opacity: 0 }}
-                  style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}
-                >
-                  <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-                    <label style={{ fontSize: '0.85rem', fontWeight: 600, color: 'var(--text-secondary)' }}>
-                      Name
-                    </label>
-                    <input
-                      type="text"
-                      required
-                      value={name}
-                      onChange={(e) => setName(e.target.value)}
-                      className="form-input hoverable"
-                      style={{
-                        padding: '0.85rem 1rem',
-                        borderRadius: '0.75rem',
-                        backgroundColor: 'var(--bg-primary)',
-                        border: '1px solid var(--border-color)',
-                        color: 'var(--text-primary)',
-                        outline: 'none',
-                        transition: 'border-color var(--transition-fast)',
-                      }}
-                      placeholder="Your Name"
-                    />
-                  </div>
+            <div className="flex items-center justify-between gap-4 pt-1">
+              <ParticleButton
+                type="submit"
+                status={status}
+                icon={<Send className="size-4" />}
+                pendingLabel="Sending..."
+                successLabel="Message Sent"
+                errorLabel="Failed — Retry"
+                className="h-11 rounded-xl bg-primary px-6 text-sm font-semibold text-primary-foreground hover:bg-primary/90"
+              >
+                Send Message
+              </ParticleButton>
 
-                  <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-                    <label style={{ fontSize: '0.85rem', fontWeight: 600, color: 'var(--text-secondary)' }}>
-                      Email
-                    </label>
-                    <input
-                      type="email"
-                      required
-                      value={email}
-                      onChange={(e) => setEmail(e.target.value)}
-                      className="form-input hoverable"
-                      style={{
-                        padding: '0.85rem 1rem',
-                        borderRadius: '0.75rem',
-                        backgroundColor: 'var(--bg-primary)',
-                        border: '1px solid var(--border-color)',
-                        color: 'var(--text-primary)',
-                        outline: 'none',
-                        transition: 'border-color var(--transition-fast)',
-                      }}
-                      placeholder="you@example.com"
-                    />
-                  </div>
-
-                  <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-                    <label style={{ fontSize: '0.85rem', fontWeight: 600, color: 'var(--text-secondary)' }}>
-                      Message
-                    </label>
-                    <textarea
-                      required
-                      rows={5}
-                      value={message}
-                      onChange={(e) => setMessage(e.target.value)}
-                      className="form-input hoverable"
-                      style={{
-                        padding: '0.85rem 1rem',
-                        borderRadius: '0.75rem',
-                        backgroundColor: 'var(--bg-primary)',
-                        border: '1px solid var(--border-color)',
-                        color: 'var(--text-primary)',
-                        outline: 'none',
-                        transition: 'border-color var(--transition-fast)',
-                        resize: 'none',
-                      }}
-                      placeholder="Your Message..."
-                    />
-                  </div>
-
-                  {status === 'error' && (
-                    <p style={{ color: 'var(--error)', fontSize: '0.85rem', fontWeight: 600 }}>
-                      Oops! Something went wrong. Please try again.
-                    </p>
-                  )}
-
-                  <button
-                    type="submit"
-                    disabled={status === 'loading'}
-                    className="btn btn-primary hoverable"
-                    style={{
-                      width: '100%',
-                      marginTop: '0.5rem',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      gap: '0.5rem',
-                    }}
-                  >
-                    {status === 'loading' ? (
-                      <>
-                        Sending Message <Loader2 size={18} className="animate-spin" />
-                      </>
-                    ) : (
-                      <>
-                        Send Message <Send size={16} />
-                      </>
-                    )}
-                  </button>
-                </motion.form>
+              {status === 'success' && (
+                <span className="font-mono text-xs text-emerald-500">
+                  Thanks! I’ll reply soon.
+                </span>
               )}
-            </AnimatePresence>
-          </div>
+              {status === 'error' && (
+                <span className="font-mono text-xs text-destructive">
+                  Could not send. Try email directly.
+                </span>
+              )}
+            </div>
+          </motion.form>
         </div>
-      </div>
 
-      {/* Footer Block */}
-      <div
-        className="container"
-        style={{
-          marginTop: '8rem',
-          borderTop: '1px solid var(--border-color)',
-          paddingTop: '2.5rem',
-          textAlign: 'center',
-        }}
-      >
-        <p style={{ fontSize: '0.875rem', color: 'var(--text-muted)', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.25rem' }}>
-          &copy; {new Date().getFullYear()} Vishal Kanwar. Crafted with <Sparkles size={14} style={{ color: 'var(--warning)' }} /> in React
-        </p>
+        {/* Footer */}
+        <footer className="mt-24 flex items-center justify-between border-t border-border pt-8 text-xs text-muted-foreground">
+          <div className="font-mono">
+            © {new Date().getFullYear()} {profile.name}
+          </div>
+        </footer>
       </div>
-
-      <style>{`
-        .form-input:focus {
-          border-color: var(--accent) !important;
-          box-shadow: 0 0 0 2px var(--accent-glow) !important;
-        }
-        .social-icon-btn {
-          width: 3rem;
-          height: 3rem;
-          border-radius: 50%;
-          background-color: var(--bg-tertiary);
-          border: 1px solid var(--border-color);
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          color: var(--text-secondary);
-          transition: all var(--transition-fast);
-        }
-        .social-icon-btn:hover {
-          color: var(--accent);
-          border-color: var(--accent);
-          transform: translateY(-2px);
-          box-shadow: 0 4px 12px var(--accent-glow);
-        }
-        @keyframes spin {
-          to { transform: rotate(360deg); }
-        }
-        .animate-spin {
-          animation: spin 1s linear infinite;
-        }
-      `}</style>
     </section>
   );
 }
