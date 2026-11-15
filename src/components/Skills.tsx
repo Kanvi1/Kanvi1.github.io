@@ -15,22 +15,22 @@ export default function Skills() {
               04 / Toolkit
             </div>
             <h2 className="mt-2 text-3xl font-bold tracking-tight text-foreground sm:text-5xl">
-              Skills &amp; Tech
+              My everyday toolkit.
             </h2>
             <p className="mt-4 max-w-sm text-base leading-relaxed text-muted-foreground">
-              A practical engineering toolkit spanning backend services, cloud infrastructure,
-              data pipelines, and front-end craft.
+              From backend architecture to the little details that make an interface feel just
+              right, these are the tools and technologies I enjoy building with.
             </p>
 
             {/* Certifications Strip */}
             <div className="mt-8 space-y-2.5">
               <div className="font-mono text-[11px] font-semibold tracking-wider text-muted-foreground uppercase">
-                Verified Certifications
+                A few credentials along the way 🎓
               </div>
               {certifications.map((cert) => (
                 <div
                   key={cert.name}
-                  className="flex items-center justify-between gap-3 rounded-xl border border-border bg-card px-4 py-2.5"
+                  className="flex items-center justify-between gap-3 rounded-xl border border-border bg-card px-4 py-2.5 transition-colors hover:border-primary/50"
                 >
                   <div className="flex items-center gap-2.5">
                     <Award className="size-4 shrink-0 text-primary" />

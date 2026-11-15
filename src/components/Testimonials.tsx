@@ -58,10 +58,11 @@ export default function Testimonials() {
               06 / Endorsements
             </div>
             <h2 className="mt-2 text-3xl font-bold tracking-tight text-foreground sm:text-5xl">
-              Kind Words
+              Don't just take my word for it.
             </h2>
             <p className="mt-3 text-sm leading-relaxed text-muted-foreground sm:text-base">
-              Notes from professors, architects, and teammates I’ve worked alongside.
+              I've been lucky to work with some incredibly talented people along the way. Here's
+              what a few of them had to say about working with me.
             </p>
           </div>
 
