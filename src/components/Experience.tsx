@@ -13,11 +13,11 @@ export default function Experience() {
               02 / Journey
             </div>
             <h2 className="mt-2 text-3xl font-bold tracking-tight text-foreground sm:text-5xl">
-              Experience
+              Where I've made an impact.
             </h2>
             <p className="mt-4 max-w-sm text-base leading-relaxed text-muted-foreground">
-              Designing resilient backend architectures, high-throughput data pipelines, and
-              leading engineering cohorts at Amazon and Deloitte.
+              From enterprise platforms to technology that helps protect human rights, here's a
+              look at the teams I've worked with and the problems I've helped solve.
             </p>
             <div className="mt-6">
               <a
@@ -79,6 +79,12 @@ export default function Experience() {
                   </span>
                 </div>
 
+                {exp.intro && (
+                  <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
+                    {exp.intro}
+                  </p>
+                )}
+
                 {/* Positions */}
                 <div className="mt-6 space-y-6 border-l border-border pl-5">
                   {exp.positions.map((pos) => (
@@ -94,9 +100,11 @@ export default function Experience() {
                         <Calendar className="size-3" />
                         <span>{pos.period}</span>
                       </div>
-                      <p className="mt-2.5 text-sm leading-relaxed text-muted-foreground">
-                        {pos.desc}
-                      </p>
+                      <div className="mt-2.5 space-y-2 text-sm leading-relaxed text-muted-foreground">
+                        {pos.desc.split('\n\n').map((para, pIdx) => (
+                          <p key={pIdx}>{para}</p>
+                        ))}
+                      </div>
                     </div>
                   ))}
                 </div>

@@ -39,10 +39,11 @@ export default function Projects() {
               03 / Portfolio
             </div>
             <h2 className="mt-2 text-3xl font-bold tracking-tight text-foreground sm:text-5xl">
-              Featured Work
+              Things I've brought to life.
             </h2>
             <p className="mt-3 max-w-md text-sm leading-relaxed text-muted-foreground sm:text-base">
-              Selected full-stack systems, AR training apps, and product design prototypes.
+              A mix of useful tools, creative experiments, and ideas that made it out of my head
+              and into the real world.
             </p>
           </div>
 
@@ -117,7 +118,10 @@ export default function Projects() {
                       {project.title}
                     </h3>
                     <p className="mt-0.5 font-mono text-xs text-primary">{project.subtitle}</p>
-                    <p className="mt-3 line-clamp-3 text-sm leading-relaxed text-muted-foreground">
+                    <p className="mt-2 text-sm font-medium text-foreground/90">
+                      {project.oneLiner}
+                    </p>
+                    <p className="mt-1.5 line-clamp-3 text-sm leading-relaxed text-muted-foreground">
                       {project.desc}
                     </p>
                   </div>
@@ -202,8 +206,8 @@ export default function Projects() {
                   <div className="mt-5 flex items-start gap-3 rounded-xl border border-amber-500/30 bg-amber-500/10 p-3.5 text-xs leading-relaxed text-muted-foreground">
                     <ShieldAlert className="mt-0.5 size-4 shrink-0 text-amber-500" />
                     <span>
-                      Due to proprietary client constraints, the source code for this module is
-                      private. Happy to walk through the architecture on a call.
+                      This one's behind closed doors 🔒 - the code is private, but I'm happy to
+                      talk through the architecture and design.
                     </span>
                   </div>
                 )}

@@ -39,7 +39,7 @@ export default function Hero() {
               <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-primary opacity-75" />
               <span className="relative inline-flex size-2 rounded-full bg-primary" />
             </span>
-            SDE at {profile.company} · Sustainability Tech
+            Software Development Engineer @ {profile.company}
           </motion.div>
 
           {/* Classy, restrained Name */}
@@ -52,39 +52,54 @@ export default function Hero() {
             {profile.firstName} {profile.lastName}
           </motion.h1>
 
+          {/* Primary Positioning Statement */}
+          <motion.p
+            initial={{ opacity: 0, y: 14 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.14 }}
+            className="mt-3 text-lg font-medium text-foreground/90 sm:text-xl"
+          >
+            Part engineer. Part designer. Full-time problem solver.
+          </motion.p>
+
           {/* Dynamic Morphing Subtitle */}
           <motion.div
             initial={{ opacity: 0, y: 14 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.16 }}
-            className="mt-4 flex flex-wrap items-baseline gap-x-2.5 text-xl font-medium text-muted-foreground sm:text-2xl"
+            transition={{ duration: 0.5, delay: 0.2 }}
+            className="mt-3 flex flex-wrap items-baseline gap-x-2.5 text-lg font-medium text-muted-foreground sm:text-xl"
           >
-            <span>Architecting</span>
+            <span>I love building</span>
             <DynamicText
               mode="morph"
               words={[...profile.heroWords]}
               interval={2400}
-              className="font-semibold text-foreground"
+              className="font-semibold text-primary"
             />
           </motion.div>
 
-          {/* Concise Bio */}
-          <motion.p
+          {/* Hero Bio */}
+          <motion.div
             initial={{ opacity: 0, y: 14 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.24 }}
-            className="mt-6 max-w-xl text-base leading-relaxed text-muted-foreground sm:text-lg"
+            transition={{ duration: 0.5, delay: 0.26 }}
+            className="mt-6 max-w-xl space-y-3 text-base leading-relaxed text-muted-foreground sm:text-lg"
           >
-            Software Development Engineer with {totalYears}+ years of experience building global
-            compliance platforms, high-throughput data pipelines, and thoughtful user interfaces.
-            M.S. in Computer Science from Arizona State University.
-          </motion.p>
+            <p>
+              I'm a software engineer at Amazon who enjoys everything from untangling backend
+              complexity to perfecting that last pixel.
+            </p>
+            <p>
+              I build software that solves real problems, makes people's lives easier, and
+              occasionally keeps me up at night (in a good way).
+            </p>
+          </motion.div>
 
           {/* CTAs */}
           <motion.div
             initial={{ opacity: 0, y: 14 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.32 }}
+            transition={{ duration: 0.5, delay: 0.34 }}
             className="mt-8 flex flex-wrap items-center gap-3"
           >
             <a
@@ -95,7 +110,7 @@ export default function Hero() {
               }}
               className="inline-flex items-center gap-2 rounded-xl bg-primary px-5 py-3 text-sm font-semibold text-primary-foreground shadow-sm transition-transform hover:-translate-y-0.5 active:translate-y-0"
             >
-              Explore Work
+              Explore My Work
               <ArrowRight className="size-4" />
             </a>
             <a
@@ -107,7 +122,7 @@ export default function Hero() {
               className="inline-flex items-center gap-2 rounded-xl border border-border bg-card/80 px-5 py-3 text-sm font-semibold text-foreground backdrop-blur-md transition-colors hover:border-primary/50"
             >
               <Mail className="size-4" />
-              Get in Touch
+              Let's Connect
             </a>
           </motion.div>
 
@@ -120,15 +135,15 @@ export default function Hero() {
           >
             <div>
               <div className="font-mono text-2xl font-bold text-foreground">{totalYears}+ yrs</div>
-              <div className="mt-0.5 text-xs text-muted-foreground">Production Eng</div>
+              <div className="mt-0.5 text-xs text-muted-foreground">Engineering Experience</div>
             </div>
             <div>
               <div className="font-mono text-2xl font-bold text-foreground">2× AWS</div>
-              <div className="mt-0.5 text-xs text-muted-foreground">SA &amp; Developer</div>
+              <div className="mt-0.5 text-xs text-muted-foreground">Associate Certifications</div>
             </div>
             <div>
               <div className="font-mono text-2xl font-bold text-foreground">4.0 GPA</div>
-              <div className="mt-0.5 text-xs text-muted-foreground">M.S. CS @ ASU</div>
+              <div className="mt-0.5 text-xs text-muted-foreground">Perfect Semester · ASU</div>
             </div>
           </motion.div>
         </div>

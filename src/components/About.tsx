@@ -1,13 +1,23 @@
-import { motion } from 'motion/react';
+import { useEffect, useState } from 'react';
+import { AnimatePresence, motion } from 'motion/react';
 import { ExternalLink } from 'lucide-react';
 import { Mark, MarkerText } from '@/components/kokonutui/marker-text';
 import { profile } from '@/data/content';
 
 export default function About() {
+  const [photoIndex, setPhotoIndex] = useState(0);
+
+  useEffect(() => {
+    const timer = window.setInterval(() => {
+      setPhotoIndex((prev) => (prev + 1) % profile.photos.length);
+    }, 10000);
+    return () => window.clearInterval(timer);
+  }, []);
+
   return (
     <section id="about" className="relative py-24 sm:py-32">
       <div className="mx-auto max-w-6xl px-6">
-        {/* Bio + Single Clean Portrait */}
+        {/* Bio + Crossfading Portrait */}
         <div className="grid items-center gap-12 lg:grid-cols-[1.15fr_0.85fr]">
           <div className="space-y-6">
             <motion.div
@@ -19,32 +29,41 @@ export default function About() {
               <div className="font-mono text-xs font-semibold tracking-[0.2em] text-primary uppercase">
                 01 / Biography
               </div>
-              <h2 className="mt-2 text-3xl font-bold tracking-tight text-foreground sm:text-5xl">
-                Engineering with{' '}
-                <span className="font-serif font-medium italic text-primary">clarity</span>
+              <h2 className="mt-2 text-3xl font-bold tracking-tight text-foreground sm:text-4xl lg:text-5xl">
+                A little about me
               </h2>
+              <p className="mt-1 font-serif text-xl font-medium italic text-primary sm:text-2xl">
+                (beyond the code)
+              </p>
             </motion.div>
 
-            <MarkerText className="space-y-5 text-base leading-relaxed text-muted-foreground sm:text-lg">
+            <MarkerText className="space-y-4 text-base leading-relaxed text-muted-foreground sm:text-lg">
+              <p className="font-medium text-foreground">Hey, I'm Vishal! 👋</p>
               <p>
-                I’m a Software Development Engineer at{' '}
-                <strong className="font-semibold text-foreground">Amazon</strong> with over 4 years
-                of full-stack engineering experience. My work centers on architecting{' '}
-                <Mark type="underline" color="#ff5005">
-                  global supplier auditing portals
-                </Mark>{' '}
-                and high-throughput data pipelines using Java, Spring Boot, Node.js, and AWS.
+                I'm a software engineer who loves turning complex problems into thoughtful
+                solutions that make a difference.
               </p>
               <p>
-                With a Master’s degree in Computer Science from{' '}
-                <strong className="font-semibold text-foreground">
-                  Arizona State University
-                </strong>
-                , I focus on combining{' '}
+                Currently, I'm at{' '}
+                <strong className="font-semibold text-foreground">Amazon</strong>, building
+                technology that{' '}
+                <Mark type="underline" color="#ff5005">
+                  helps protect human rights across its global supply chain
+                </Mark>
+                . It's the kind of work that reminds me why I love engineering - creating things
+                that matter beyond the screen.
+              </p>
+              <p>
+                I've always enjoyed both sides of software:{' '}
                 <Mark type="highlight" color="rgba(255, 80, 5, 0.22)">
-                  backend engineering precision with clean UI design
+                  the engineering that makes things tick and the design that makes them a joy to
+                  use.
                 </Mark>{' '}
-                to solve human risk, sustainability, and compliance challenges at scale.
+                From backend systems to polished interfaces, I love bringing ideas to life.
+              </p>
+              <p>
+                When I'm not staring at a screen, you'll probably find me snowboarding (with varying
+                degrees of grace), exploring hiking trails, or getting lost in a video game.
               </p>
             </MarkerText>
 
@@ -70,7 +89,7 @@ export default function About() {
             </div>
           </div>
 
-          {/* Single Portrait (untagged, ready for sticker/doodle update) */}
+          {/* Rotating Portraits (untagged) */}
           <motion.div
             initial={{ opacity: 0, scale: 0.97 }}
             whileInView={{ opacity: 1, scale: 1 }}
@@ -78,12 +97,19 @@ export default function About() {
             transition={{ duration: 0.5 }}
             className="mx-auto w-full max-w-sm"
           >
-            <div className="overflow-hidden rounded-2xl border border-border bg-card shadow-lg">
-              <img
-                src={profile.photos[0]}
-                alt={profile.name}
-                className="aspect-[4/5] w-full object-cover"
-              />
+            <div className="relative aspect-[4/5] w-full overflow-hidden rounded-2xl border border-border bg-card shadow-lg">
+              <AnimatePresence mode="wait">
+                <motion.img
+                  key={photoIndex}
+                  src={profile.photos[photoIndex]}
+                  alt={profile.name}
+                  initial={{ opacity: 0, scale: 1.03 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0, scale: 0.98 }}
+                  transition={{ duration: 0.55 }}
+                  className="absolute inset-0 size-full object-cover"
+                />
+              </AnimatePresence>
             </div>
           </motion.div>
         </div>

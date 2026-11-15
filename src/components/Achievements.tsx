@@ -68,11 +68,11 @@ export default function Achievements() {
               05 / Milestones
             </div>
             <h2 className="mt-2 text-3xl font-bold tracking-tight text-foreground sm:text-5xl">
-              Achievements
+              A few proud moments.
             </h2>
             <p className="mt-3 max-w-md text-sm leading-relaxed text-muted-foreground sm:text-base">
-              Certifications, awards, open-source sprints, and engineering milestones from 2017 to
-              today.
+              A collection of milestones, little victories, and moments that made the journey
+              worthwhile. Some took years of hard work. Others took a lot of coffee.
             </p>
           </div>
 
